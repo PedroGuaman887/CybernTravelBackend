@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -20,7 +20,13 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'nombre',
+        'apellido',
+        'email',
+        'password',
+        'fecha_nacimiento',
+        'telefono',
+        'tarjeta_credito',
     ];
 
     /**
@@ -44,11 +50,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function getJWTIdentifier()
     {
-    	return $this->getKey();
+        return $this->getKey();
     }
 
     public function getJWTCustomClaims()
     {
-    	return [];
+        return [];
     }
 }

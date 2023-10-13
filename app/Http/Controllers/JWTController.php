@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Validetor;
 use App\Models\User;
+use App\Notifications\UserRegistered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -33,9 +34,13 @@ class JWTController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:2|max:100',
+            'nombre' => 'required|string|min:2|max:100',
+            'apellido' => 'required|string|min:2|max:100',
             'email' => 'required|string|min:2|max:100',
             'password' => 'required|string|confirmed|min:6',
+            'fecha_nacimiento' => 'required|date',
+            'telefono' => 'required|integer',
+            'tarjeta_credito' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -43,15 +48,20 @@ class JWTController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-            
+            'nombre' => $request->input('nombre'),
+            'apellido' => $request->input('apellido'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'fecha_nacimiento' => $request->input('fecha_nacimiento'),
+            'telefono' => $request->input('telefono'),
+            'tarjeta_credito' => $request->input('tarjeta_credito'),
+
         ]);
 
         //envio email
-
         //Mail::to($user->email)->send(new AccountCreated($user));
+
+        $user->notify(new UserRegistered($user));
 
         return response()->json([
             'message' => 'Usuario registrado con exito',
