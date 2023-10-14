@@ -71,7 +71,7 @@ class JWTController extends Controller
 
         //envio email
 
-        Mail::to($user->email)->send(new AccountCreated($user));
+       //Mail::to($user->email)->send(new AccountCreated($user));
 
         return response()->json([
             'message' => 'Usuario registrado con exito',
