@@ -13,14 +13,14 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
-
+    protected $primaryKey = 'idUser';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'ciNumber', 'firstName', 'lastName', 'email','phoneNumber','address', 'profilePicture', 'birthDate', 'role', 'password',
     ];
 
     /**
