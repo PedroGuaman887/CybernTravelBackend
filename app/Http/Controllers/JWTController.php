@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+
 use Auth;
 use Validetor;
 use App\Models\User;
@@ -12,6 +14,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Collection;
+
+use App\Imports\UserImport;
+
+//prueba email
+use App\Mail\AccountCreated;
+use Illuminate\Support\Facades\Mail;
 
 class JWTController extends Controller
 {
@@ -71,7 +79,7 @@ class JWTController extends Controller
 
         //envio email
 
-       //Mail::to($user->email)->send(new AccountCreated($user));
+       Mail::to($user->email)->send(new AccountCreated($user));
 
         return response()->json([
             'message' => 'Usuario registrado con exito',
