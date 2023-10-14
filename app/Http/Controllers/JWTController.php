@@ -39,7 +39,7 @@ class JWTController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-     public function listUsers()
+    public function listUsers()
     {
         //muestra todos los usuaros
         $user = DB::table('users')->get();
@@ -58,6 +58,7 @@ class JWTController extends Controller
             'address' => 'required|string|min:2|max:100',
             'profilePicture' => 'required|string|min:2|max:100',
             'password' => 'required|string|confirmed|min:6',
+            'birthDate' => 'required|date',
         ]);
 
         if ($validator->fails()) {
@@ -74,12 +75,12 @@ class JWTController extends Controller
             'address' => $request->address,
             'profilePicture' => $request->profilePicture,
             'birthDate' => $request->birthDate,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
         ]);
 
         //envio email
 
-       Mail::to($user->email)->send(new AccountCreated($user));
+        Mail::to($user->email)->send(new AccountCreated($user));
 
         return response()->json([
             'message' => 'Usuario registrado con exito',
@@ -208,5 +209,4 @@ class JWTController extends Controller
 
         return $user;
     }
-
 }
