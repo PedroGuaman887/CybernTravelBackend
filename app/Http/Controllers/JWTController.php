@@ -19,6 +19,7 @@ use App\Imports\UserImport;
 
 //prueba email
 use App\Mail\AccountCreated;
+use App\Notifications\UserRegistered;
 use Illuminate\Support\Facades\Mail;
 
 class JWTController extends Controller
@@ -80,7 +81,8 @@ class JWTController extends Controller
 
         //envio email
 
-        Mail::to($user->email)->send(new AccountCreated($user));
+        //Mail::to($user->email)->send(new AccountCreated($user));
+        $user->notify(new UserRegistered($user));
 
         return response()->json([
             'message' => 'Usuario registrado con exito',
