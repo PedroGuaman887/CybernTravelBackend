@@ -8,20 +8,19 @@
 <body>
     <h1>Cuenta creada</h1>
 
-    <p>Hola {{ $user->firstName }},</p>
+    <p>Hola {{ $user->firstName }}.</p>
 
     <p>Tu cuenta ha sido creada exitosamente. A continuación, encontrarás los detalles de tu cuenta:</p>
 
 
     <ul>
         <li>Ci:{{ $user->ciNumber }}</li>
-        <li>firstName: {{ $user->firstName }}</li>
-        <li>lastName: {{ $user->lastName }}</li>
-        <li>Email: {{ $user->email }}</li>
-        <li>phoneNumber: {{ $user->phoneNumber }}</li>
-        <li>role: {{ $user->role }}</li>
-        <li>address: {{ $user->address }}</li>
-        <li>birthDate: {{ $user->birthDate }}</li>
+        <li>Nombre: {{ $user->firstName }}</li>
+        <li>Apellido: {{ $user->lastName }}</li>
+        <li>Correo: {{ $user->email }}</li>
+        <li>Celular: {{ $user->phoneNumber }}</li>
+        <li>Direccion: {{ $user->address }}</li>
+        <li>Fecha de nacimiento: {{ $user->birthDate }}</li>
 
         <p>Por favor cambie su contraseña</p>
     </ul>
