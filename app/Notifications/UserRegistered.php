@@ -40,7 +40,8 @@ class UserRegistered extends Notification
      */
     public function toMail($notifiable)
     {
-        $verificationUrl = url("/email/verify/{$notifiable->getKey()}/" . urlencode($notifiable->getEmailForVerification()));
+        $verificationUrl = url("/api/email/verify/{$notifiable->getKey()}/" . $notifiable->verification_token);
+
 
         return (new MailMessage)
             ->line('¡Bienvenido a nuestra aplicación!')

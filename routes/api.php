@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmailVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
@@ -23,6 +24,5 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/users', [JWTController::class, 'listUsers']);
     Route::get('/users/{idUser}', [JWTController::class, 'userById']);
     Route::post('/users/updatePassword/{idUser}', [JWTController::class, 'updatePassword']);
-
+    Route::get('/email/verify/{id}', [EmailVerificationController::class, 'verify']);
 });
-

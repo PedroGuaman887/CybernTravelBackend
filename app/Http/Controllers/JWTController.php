@@ -168,6 +168,7 @@ class JWTController extends Controller
                 "email" => auth('api')->user()->email,
                 "phoneNumber" => auth('api')->user()->phoneNumber,
                 "role" => auth('api')->user()->role,
+                "email_verified_at" => auth('api')->user()->email_verified_at,
                 //nos vota el la informacion del usuario y hace que se almacene en el local storage evita consultas continuas
             ],
             "idUser" => auth('api')->user()->idUser,
