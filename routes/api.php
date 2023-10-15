@@ -26,3 +26,11 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/users/updatePassword/{idUser}', [JWTController::class, 'updatePassword']);
     Route::get('/email/verify/{id}', [EmailVerificationController::class, 'verify']);
 });
+
+Route::get('/login', function () {
+    return view('auth.login');
+});
+
+Route::get('/register', function () {
+    return view('auth.register');
+});
