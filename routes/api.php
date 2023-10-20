@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
+use App\Http\Controllers\PropertiesController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,5 +25,9 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/users/{idUser}', [JWTController::class, 'userById']);
     Route::post('/users/updatePassword/{idUser}', [JWTController::class, 'updatePassword']);
 
+    Route::post('/createdProperties', [PropertiesController::class, 'createdProperties']);
+    Route::get('/properties/{idProperty}', [PropertiesController::class, 'propertiesById']);
+    Route::post('/properties/updateProperties/{idProperty}', [PropertiesController::class, 'updateProperties']);
+    Route::delete('/properties/deleteProperties/{idProperty}', [PropertiesController::class, 'deleteProperties']);
 });
 

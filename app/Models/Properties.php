@@ -15,6 +15,40 @@ class Properties extends Model
      * @var array
      */
     protected $fillable = [
-         'idProperty', 'propertyName', 'propertyPicture', 'propertyOperation', 'propertyType','propertyAddress','propertyDescription', 'propertyServices', 'propertyStatus', 'propertyAmount', 'propertyAbility', 'propertyStartA', 'propertyEndA','propertyStartB', 'propertyEndB', 'propertyStartC', 'propertyEndC','propertyStartD', 'propertyEndD', 'propertyStartE', 'propertyEndE','propertyStartF', 'propertyEndF', 'propertyStartG', 'propertyEndG','propertyStartH', 'propertyEndH', 'propertyAmountA', 'propertyAmountB', 'propertyAmountC', 'propertyAmountD', 'propertyAmountE', 'propertyAmountF', 'propertyAmountG', 'propertyAmountH'
+         'idProperty',
+         'propertyName',
+         'propertyPicture',
+         'propertyOperation',
+         'propertyType',
+         'propertyAddress',
+         'propertyDescription',
+         'propertyServices',
+         'propertyStatus',
+         'propertyAmount',
+         'propertyAbility',
+         'propertyStartA',
+         'propertyEndA',
+         'propertyStartB',
+         'propertyEndB',
+         'propertyStartC',
+         'propertyEndC',
+         'propertyStartD',
+         'propertyEndD',
+         'propertyStartE',
+         'propertyEndE',
+         'propertyStartF',
+         'propertyEndF',
+         'propertyStartG',
+         'propertyEndG',
+         'propertyStartH',
+         'propertyEndH',
+         'propertyAmountA',
+         'propertyAmountB', 
+         'propertyAmountC', 
+         'propertyAmountD', 
+         'propertyAmountE', 
+         'propertyAmountF', 
+         'propertyAmountG', 
+         'propertyAmountH'
     ];
 }
