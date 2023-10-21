@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Collection;
 
-use App\Imports\UserImport;
+//use App\Imports\UserImport;
 
 //prueba email
 use App\Mail\AccountCreated;
@@ -100,7 +100,7 @@ class JWTController extends Controller
         }
 
         if (!$token = auth('api')->attempt($validator->validated())) {
-            return response()->json(['error' => 'Correo o contraseña incorrecto'], 401);
+            return response()->json(['error' => 'Wrong email or password'], 401);
         }
 
         return $this->respondWithToken($token);
