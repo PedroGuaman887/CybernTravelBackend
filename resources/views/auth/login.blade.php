@@ -26,7 +26,7 @@
                 <form id="loginform" method="POST" action="{{ url('api/users/authenticate')}}">
                     @csrf
                     <div>
-                        <input type="texot" name="email" placeholder="Correo electronico" required pattern="^[A-Za-z\s]">
+                        <input type="email" name="email" placeholder="Correo electronico" required>
 
                         <input type="password" placeholder="Contraseña" name="password" required>
 
