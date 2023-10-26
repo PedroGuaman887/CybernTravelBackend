@@ -50,8 +50,7 @@ class JWTController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'firstName' => 'required|string|min:2|max:100',
-            'lastName' => 'required|string|min:2|max:100',
+            'fullName' => 'required|string|min:2|max:100',
             'email' => 'required|string|email|max:100|unique:users',
             'phoneNumber' => 'required|string|min:2|max:100',
             'password' => 'required|string|min:6',
@@ -63,8 +62,7 @@ class JWTController extends Controller
         }
 
         $user = User::create([
-            'firstName' => $request->firstName,
-            'lastName' => $request->lastName,
+            'fullName' => $request->fullName,
             'email' => $request->email,
             'phoneNumber' => $request->phoneNumber,
             'birthDate' => $request->birthDate,
@@ -154,19 +152,13 @@ class JWTController extends Controller
 
 
             "user" => [
-                "ciNumber" => auth('api')->user()->ciNumber,
-                "firstName" => auth('api')->user()->firstName,
-                "lastName" => auth('api')->user()->lastName,
+                "idUser" => auth('api')->user()->idUser,
+                "fullName" => auth('api')->user()->fullName,
                 "email" => auth('api')->user()->email,
                 "phoneNumber" => auth('api')->user()->phoneNumber,
                 "email_verified_at" => auth('api')->user()->email_verified_at,
                 //nos vota el la informacion del usuario y hace que se almacene en el local storage evita consultas continuas
-            ],
-            "idUser" => auth('api')->user()->idUser,
-            "ciNumber" => auth('api')->user()->ciNumber,
-            "firstName" => auth('api')->user()->firstName,
-            "lastName" => auth('api')->user()->lastName,
-            "email" => auth('api')->user()->email,
+            ]
         ]);
     }
 
@@ -197,7 +189,7 @@ class JWTController extends Controller
     public function userById(Request $request)  // obtener users por id
     {
         $user = DB::table('users')->where('idUser', '=', $request->idUser)
-            ->select('users.idUser', 'users.ciNumber', 'users.firstName', 'users.lastName', 'users.email', 'users.phoneNumber', 'users.role', 'users.address', 'users.profilePicture', 'users.birthDate')
+            ->select('users.idUser', 'users.fullName', 'users.email', 'users.phoneNumber', 'users.birthDate')
             ->get();
 
         return $user;

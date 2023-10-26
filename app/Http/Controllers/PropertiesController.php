@@ -13,41 +13,41 @@ class PropertiesController extends Controller
     public function createdProperties(Request $request)
     {
         $validator = Validator::make($request->all(), [  //valida los maximos y
-            'propertyName'=> 'required|string|min:1|max:500',
-            'propertyPicture'=> 'required|string|min:1|max:500',
-            'propertyOperation'=> 'required|string|min:1|max:500',
-            'propertyType'=> 'required|string|min:1|max:500',
-            'propertyAddress'=> 'required|string|min:1|max:500',
-            'propertyDescription'=> 'required|string|min:1|max:500',
-            'propertyServices'=> 'required|string|min:1|max:500',
-            'propertyStatus'=> 'required|string|min:1|max:500',
-            'propertyAmount'=> 'required|integer|min:0',
-            'propertyAbility'=> 'required|integer|min:0',
-            'propertyStartA'=> 'date_format:Y-m-d',
-            'propertyEndA'=> 'date_format:Y-m-d',
-            'propertyStartB'=> 'date_format:Y-m-d',
-            'propertyEndB'=> 'date_format:Y-m-d',
-            'propertyStartC'=> 'date_format:Y-m-d',
-            'propertyEndC'=> 'date_format:Y-m-d',
-            'propertyStartD'=> 'date_format:Y-m-d',
-            'propertyEndD'=> 'date_format:Y-m-d',
-            'propertyStartE'=> 'date_format:Y-m-d',
-            'propertyEndE'=> 'date_format:Y-m-d',
-            'propertyStartF'=> 'date_format:Y-m-d',
-            'propertyEndF'=> 'date_format:Y-m-d',
-            'propertyStartG'=> 'date_format:Y-m-d',
-            'propertyEndG'=> 'date_format:Y-m-d',
-            'propertyStartH'=> 'date_format:Y-m-d',
-            'propertyEndH'=> 'date_format:Y-m-d',
-            'propertyAmountA'=> 'required|integer|min:0',
-            'propertyAmountB'=> 'required|integer|min:0', 
-            'propertyAmountC'=> 'required|integer|min:0', 
-            'propertyAmountD'=> 'required|integer|min:0', 
-            'propertyAmountE'=> 'required|integer|min:0', 
-            'propertyAmountF'=> 'required|integer|min:0', 
-            'propertyAmountG'=> 'required|integer|min:0', 
-            'propertyAmountH'=> 'required|integer|min:0',     
-        
+            'propertyName' => 'required|string|min:1|max:500',
+            'propertyPicture' => 'required|string|min:1|max:500',
+            'propertyOperation' => 'required|string|min:1|max:500',
+            'propertyType' => 'required|string|min:1|max:500',
+            'propertyAddress' => 'required|string|min:1|max:500',
+            'propertyDescription' => 'required|string|min:1|max:500',
+            'propertyServices' => 'required|string|min:1|max:500',
+            'propertyStatus' => 'required|string|min:1|max:500',
+            'propertyAmount' => 'required|integer|min:0',
+            'propertyAbility' => 'required|integer|min:0',
+            'propertyStartA' => 'date_format:Y-m-d',
+            'propertyEndA' => 'date_format:Y-m-d',
+            'propertyStartB' => 'date_format:Y-m-d',
+            'propertyEndB' => 'date_format:Y-m-d',
+            'propertyStartC' => 'date_format:Y-m-d',
+            'propertyEndC' => 'date_format:Y-m-d',
+            'propertyStartD' => 'date_format:Y-m-d',
+            'propertyEndD' => 'date_format:Y-m-d',
+            'propertyStartE' => 'date_format:Y-m-d',
+            'propertyEndE' => 'date_format:Y-m-d',
+            'propertyStartF' => 'date_format:Y-m-d',
+            'propertyEndF' => 'date_format:Y-m-d',
+            'propertyStartG' => 'date_format:Y-m-d',
+            'propertyEndG' => 'date_format:Y-m-d',
+            'propertyStartH' => 'date_format:Y-m-d',
+            'propertyEndH' => 'date_format:Y-m-d',
+            'propertyAmountA' => 'integer|min:0',
+            'propertyAmountB' => 'integer|min:0',
+            'propertyAmountC' => 'integer|min:0',
+            'propertyAmountD' => 'integer|min:0',
+            'propertyAmountE' => 'integer|min:0',
+            'propertyAmountF' => 'integer|min:0',
+            'propertyAmountG' => 'integer|min:0',
+            'propertyAmountH' => 'integer|min:0',
+
         ]);
 
         if ($validator->fails()) {
@@ -55,40 +55,40 @@ class PropertiesController extends Controller
         }
 
         $properties = new properties([
-            'propertyName'=> $request->propertyName,
-            'propertyPicture'=> $request->propertyPicture,
-            'propertyOperation'=> $request->propertyOperation,
-            'propertyType'=> $request->propertyType,
-            'propertyAddress'=> $request->propertyAddress,
-            'propertyDescription'=> $request->propertyDescription,
-            'propertyServices'=> $request->propertyServices,
-            'propertyStatus'=> $request->propertyStatus,
-            'propertyAmount'=> $request->propertyAmount,
-            'propertyAbility'=> $request->propertyAbility,
-            'propertyStartA'=> $request->propertyStartA,
-            'propertyEndA'=> $request->propertyEndA,
-            'propertyStartB'=> $request->propertyStartB,
-            'propertyEndB'=> $request->propertyEndB,
-            'propertyStartC'=> $request->propertyStartC,
-            'propertyEndC'=> $request->propertyEndC,
-            'propertyStartD'=> $request->propertyStartD,
-            'propertyEndD'=> $request->propertyEndD,
-            'propertyStartE'=> $request->propertyStartE,
-            'propertyEndE'=> $request->propertyEndE,
-            'propertyStartF'=> $request->propertyStartF,
-            'propertyEndF'=> $request->propertyEndF,
-            'propertyStartG'=> $request->propertyStartG,
-            'propertyEndG'=> $request->propertyEndG,
-            'propertyStartH'=> $request->propertyStartH,
-            'propertyEndH'=> $request->propertyEndH,
-            'propertyAmountA'=> $request->propertyAmountA,
-            'propertyAmountB'=> $request->propertyAmountB, 
-            'propertyAmountC'=> $request->propertyAmountC, 
-            'propertyAmountD'=> $request->propertyAmountD, 
-            'propertyAmountE'=> $request->propertyAmountE, 
-            'propertyAmountF'=> $request->propertyAmountF, 
-            'propertyAmountG'=> $request->propertyAmountG, 
-            'propertyAmountH'=> $request->propertyAmountH,
+            'propertyName' => $request->propertyName,
+            'propertyPicture' => $request->propertyPicture,
+            'propertyOperation' => $request->propertyOperation,
+            'propertyType' => $request->propertyType,
+            'propertyAddress' => $request->propertyAddress,
+            'propertyDescription' => $request->propertyDescription,
+            'propertyServices' => $request->propertyServices,
+            'propertyStatus' => $request->propertyStatus,
+            'propertyAmount' => $request->propertyAmount,
+            'propertyAbility' => $request->propertyAbility,
+            'propertyStartA' => $request->propertyStartA,
+            'propertyEndA' => $request->propertyEndA,
+            'propertyStartB' => $request->propertyStartB,
+            'propertyEndB' => $request->propertyEndB,
+            'propertyStartC' => $request->propertyStartC,
+            'propertyEndC' => $request->propertyEndC,
+            'propertyStartD' => $request->propertyStartD,
+            'propertyEndD' => $request->propertyEndD,
+            'propertyStartE' => $request->propertyStartE,
+            'propertyEndE' => $request->propertyEndE,
+            'propertyStartF' => $request->propertyStartF,
+            'propertyEndF' => $request->propertyEndF,
+            'propertyStartG' => $request->propertyStartG,
+            'propertyEndG' => $request->propertyEndG,
+            'propertyStartH' => $request->propertyStartH,
+            'propertyEndH' => $request->propertyEndH,
+            'propertyAmountA' => $request->propertyAmountA,
+            'propertyAmountB' => $request->propertyAmountB,
+            'propertyAmountC' => $request->propertyAmountC,
+            'propertyAmountD' => $request->propertyAmountD,
+            'propertyAmountE' => $request->propertyAmountE,
+            'propertyAmountF' => $request->propertyAmountF,
+            'propertyAmountG' => $request->propertyAmountG,
+            'propertyAmountH' => $request->propertyAmountH,
         ]);
         $properties->save();
 
@@ -98,10 +98,11 @@ class PropertiesController extends Controller
         ], 201);
     }
 
-    public function propertiesById (Request $request)
+    public function propertiesById(Request $request)
     {
         $properties = DB::table('properties')->where('idProperty', '=', $request->idProperty)
-        ->select('properties.idProperty',
+            ->select(
+                'properties.idProperty',
                 'properties.propertyName',
                 'properties.propertyPicture',
                 'properties.propertyOperation',
@@ -129,22 +130,23 @@ class PropertiesController extends Controller
                 'properties.propertyStartH',
                 'properties.propertyEndH',
                 'properties.propertyAmountA',
-                'properties.propertyAmountB', 
-                'properties.propertyAmountC', 
-                'properties.propertyAmountD', 
-                'properties.propertyAmountE', 
-                'properties.propertyAmountF', 
-                'properties.propertyAmountG', 
-                'properties.propertyAmountH')
+                'properties.propertyAmountB',
+                'properties.propertyAmountC',
+                'properties.propertyAmountD',
+                'properties.propertyAmountE',
+                'properties.propertyAmountF',
+                'properties.propertyAmountG',
+                'properties.propertyAmountH'
+            )
             ->get();
 
-        return $properties;       
+        return $properties;
     }
 
-    public function updateProperties (Request $request, $id)
+    public function updateProperties(Request $request, $id)
     {
         $properties = properties::find($id);
-        
+
         $properties->propertyName = $request->propertyName;
         $properties->propertyPicture = $request->propertyPicture;
         $properties->propertyOperation = $request->propertyOperation;
@@ -172,19 +174,19 @@ class PropertiesController extends Controller
         $properties->propertyStartH = $request->propertyStartH;
         $properties->propertyEndH = $request->propertyEndH;
         $properties->propertyAmountA = $request->propertyAmountA;
-        $properties->propertyAmountB = $request->propertyAmountB; 
-        $properties->propertyAmountC = $request->propertyAmountC; 
-        $properties->propertyAmountD = $request->propertyAmountD; 
-        $properties->propertyAmountE = $request->propertyAmountE; 
-        $properties->propertyAmountF = $request->propertyAmountF; 
-        $properties->propertyAmountG = $request->propertyAmountG; 
+        $properties->propertyAmountB = $request->propertyAmountB;
+        $properties->propertyAmountC = $request->propertyAmountC;
+        $properties->propertyAmountD = $request->propertyAmountD;
+        $properties->propertyAmountE = $request->propertyAmountE;
+        $properties->propertyAmountF = $request->propertyAmountF;
+        $properties->propertyAmountG = $request->propertyAmountG;
         $properties->propertyAmountH = $request->propertyAmountH;
 
         $properties->save();
         return $properties;
     }
 
-    public function deleteProperties (Request $request)
+    public function deleteProperties(Request $request)
     {
         $deleted = properties::destroy($request->idProperty);
 
