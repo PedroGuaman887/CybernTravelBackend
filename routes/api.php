@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\PropertiesController;
+use App\Http\Controllers\HolidaysController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,6 +31,11 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/properties/{idProperty}', [PropertiesController::class, 'propertiesById']);
     Route::post('/properties/updateProperties/{idProperty}', [PropertiesController::class, 'updateProperties']);
     Route::delete('/properties/deleteProperties/{idProperty}', [PropertiesController::class, 'deleteProperties']);
+
+    Route::post('/holidays', [HolidaysController::class, 'createdHolidays']);
+    Route::get('/holidays/{idHolidays}', [HolidaysController::class, 'holidaysById']);
+    Route::post('/holidays/updateholidays/{idHolidays}', [HolidaysController::class, 'updateHolidays']);
+    Route::delete('/holidays/deleteholidays/{idHolidays}', [HolidaysController::class, 'deleteHolidays']);
 });
 
 Route::get('/login', function () {

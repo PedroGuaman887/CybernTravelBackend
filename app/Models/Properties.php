@@ -26,7 +26,7 @@ class Properties extends Model
         'propertyStatus',
         'propertyAmount',
         'propertyAbility',
-        'host_id',
+        'host_id', 
     ];
 
     public function holidays()

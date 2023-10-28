@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Holidays;
 use App\Models\Properties;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +24,7 @@ class PropertiesController extends Controller
             'propertyServices' => 'required|string|min:1|max:100',
             'propertyStatus' => 'required|string|min:1|max:100',
             'propertyAmount' => 'required|integer|min:0',
-            'propertyAbility' => 'required|integer|min:0',
+            'propertyAbility' => 'required|integer|min:0', 
             'host_id' => 'required|integer|min:0'
         ]);
 
@@ -40,7 +41,7 @@ class PropertiesController extends Controller
             'propertyDescription' => $request->propertyDescription,
             'propertyServices' => $request->propertyServices,
             'propertyStatus' => $request->propertyStatus,
-            'propertyAmount' => $request->propertyAmount,
+            'propertyAmount' => $request->propertyAmount, 
             'propertyAbility' => $request->propertyAbility,
 
         ]);
@@ -49,9 +50,15 @@ class PropertiesController extends Controller
         $property->save();
 
 
-        $propertyId = $property->idProperty;
+        $propertyId = $property->idProperty; 
 
         $holidays = $request->input('holidays');
+
+        if (!is_array($holidays)) {
+            return response()->json([
+                'message' => 'El campo holidays debe ser un array válido.',
+            ], 400);
+        }
 
         foreach ($holidays as $holidayData) {
             $holiday = new Holidays([
@@ -79,8 +86,21 @@ class PropertiesController extends Controller
 
     public function propertiesById(Request $request)
     {
-        $properties = DB::table('properties')->where('idProperty', '=', $request->idProperty)
+        $properties = DB::table('properties')
+        ->leftJoin('users', 'users.idUser', '=', 'properties.host_id')
+        ->where('idProperty', '=', $request->idProperty)
+        ->where(function ($query) {
+            $query->whereNull('properties.host_id')
+                ->orWhereNotNull('properties.host_id');
+        })
             ->select(
+
+                'users.idUser',
+                'users.fullName',
+                'users.email',
+                'users.phoneNumber',
+                'users.birthDate',
+
                 'properties.idProperty',
                 'properties.propertyName',
                 'properties.propertyPicture',
@@ -92,6 +112,7 @@ class PropertiesController extends Controller
                 'properties.propertyStatus',
                 'properties.propertyAmount',
                 'properties.propertyAbility',
+                'properties.host_id',
             )
             ->get();
 
