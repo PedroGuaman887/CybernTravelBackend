@@ -15,7 +15,7 @@ class CreatePropertiesTable extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id('idProperty');
-            
+
             $table->string('propertyName');
             $table->string('propertyPicture');
             $table->string('propertyOperation');
@@ -26,13 +26,11 @@ class CreatePropertiesTable extends Migration
             $table->string('propertyStatus');
             $table->integer('propertyAmount');
             $table->integer('propertyAbility');
-            $table->unsignedBigInteger('property_id');
-            $table->unsignedBigInteger('holiday_id');
+            $table->unsignedBigInteger('host_id');
 
-            $table->foreign('property_id')->references('idProperty')->on('properties')->onDelete('cascade');
-            $table->foreign('holiday_id')->references('idHolidays')->on('holidays')->onDelete('cascade');
+            $table->foreign('host_id')->references('idUser')->on('users')->onDelete('cascade');
 
-            $table->timestamps(); 
+            $table->timestamps();
         });
     }
 
