@@ -15,18 +15,18 @@ class Properties extends Model
      * @var array
      */
     protected $fillable = [
-        'idProperty', 
-        'propertyName', 
-        'propertyPicture', 
-        'propertyOperation', 
+        'idProperty',
+        'propertyName',
+        'propertyPicture',
+        'propertyOperation',
         'propertyType',
         'propertyAddress',
-        'propertyDescription', 
-        'propertyServices', 
-        'propertyStatus', 
-        'propertyAmount', 
-        'propertyAbility', 
-        'holidays_id',
+        'propertyDescription',
+        'propertyServices',
+        'propertyStatus',
+        'propertyAmount',
+        'propertyAbility',
+        'host_id',
     ];
 
     public function holidays()
