@@ -18,7 +18,7 @@ class CreateHolidaysTable extends Migration
             $table->date('startDate');
             $table->date('endDate');
             $table->integer('amount');
-            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('property_id'); 
 
             $table->foreign('property_id')->references('idProperty')->on('properties')->onDelete('cascade');
             $table->timestamps();
