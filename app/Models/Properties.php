@@ -26,6 +26,7 @@ class Properties extends Model
         'propertyStatus',
         'propertyAmount',
         'propertyAbility',
+        'propertyCity',
         'host_id', 
     ];
 

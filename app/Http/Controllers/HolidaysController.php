@@ -31,7 +31,7 @@ class HolidaysController extends Controller
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
             'amount' => $request->amount,
-            
+            'status' => $request->status,
         ]);
         $holidays->property_id = $request->property_id;
         
@@ -69,6 +69,7 @@ class HolidaysController extends Controller
                 'holidays.startDate',
                 'holidays.endDate',
                 'holidays.amount',
+                'holidays.status',
 
                 'properties.idProperty',
                 'properties.propertyName',
@@ -95,6 +96,7 @@ class HolidaysController extends Controller
         $holidays->startDate = $request->startDate;
         $holidays->endDate = $request->endDate;
         $holidays->amount = $request->amount;
+        $holidays->status = $request->status;
         
         $holidays->save();
         return $holidays;
