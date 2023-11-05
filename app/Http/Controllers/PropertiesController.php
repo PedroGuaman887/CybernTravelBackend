@@ -24,7 +24,8 @@ class PropertiesController extends Controller
             'propertyServices' => 'required|string|min:1|max:100',
             'propertyStatus' => 'required|string|min:1|max:100',
             'propertyAmount' => 'required|integer|min:0',
-            'propertyAbility' => 'required|integer|min:0', 
+            'propertyAbility' => 'required|integer|min:0',
+            'propertyCity' => 'required', 
             'host_id' => 'required|integer|min:0'
         ]);
 
@@ -42,6 +43,7 @@ class PropertiesController extends Controller
             'propertyServices' => $request->propertyServices,
             'propertyStatus' => $request->propertyStatus,
             'propertyAmount' => $request->propertyAmount, 
+            'propertyCity' => $request->propertyCity,
             'propertyAbility' => $request->propertyAbility,
 
         ]);
@@ -112,6 +114,7 @@ class PropertiesController extends Controller
                 'properties.propertyStatus',
                 'properties.propertyAmount',
                 'properties.propertyAbility',
+                'properties.propertyCity',
                 'properties.host_id',
             )
             ->get();
@@ -133,6 +136,7 @@ class PropertiesController extends Controller
         $properties->propertyStatus = $request->propertyStatus;
         $properties->propertyAmount = $request->propertyAmount;
         $properties->propertyAbility = $request->propertyAbility;
+        $properties->propertyCity = $request->propertyCity;
 
         $properties->save();
         return $properties;

@@ -9,10 +9,10 @@ class Images extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'idImage';
+    protected $primaryKey = 'idImages';
 
     protected $fillable = [
-        'idImage',
+        'idImages',
         'imageLink',
         'imageDescription',
     ];

@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Ratings extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idRating';
+    protected $primaryKey = 'idRatings';
 
     protected $fillable = [
-        'idRating',
+        'idRatings',
         'ratingStar',
         'ratingComment',
     ];
