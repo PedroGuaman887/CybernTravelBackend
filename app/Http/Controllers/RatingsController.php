@@ -49,7 +49,7 @@ class RatingsController extends Controller
         ], 201);
     }
 
-    public function ratingById(Request $request)
+    public function ratingsById(Request $request)
     {
         $rating = DB::table('ratings')
             ->leftJoin('properties', 'properties.idProperty', '=', 'ratings.property_id')
@@ -82,7 +82,7 @@ class RatingsController extends Controller
         return $rating;
     }
 
-    public function updateRating(Request $request, $id)
+    public function updateRatings(Request $request, $id)
     {
         $ratings = Ratings::find($id);
 
