@@ -26,6 +26,7 @@ class CreatePropertiesTable extends Migration
             $table->string('propertyStatus');
             $table->integer('propertyAmount');
             $table->integer('propertyAbility');
+            $table->string('propertyCity');
             $table->unsignedBigInteger('host_id');
 
             $table->foreign('host_id')->references('idUser')->on('users')->onDelete('cascade');
