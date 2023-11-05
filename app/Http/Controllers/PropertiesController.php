@@ -15,12 +15,12 @@ class PropertiesController extends Controller
     public function createdProperties(Request $request)
     {
         $validator = Validator::make($request->all(), [  //valida los maximos y
-            'propertyName' => 'required|string|min:1|max:100',
+            'propertyName' => 'required|string|min:1|max:50',
             'propertyPicture' => 'required|string|min:1|max:100',
             'propertyOperation' => 'required|string|min:1|max:100',
             'propertyType' => 'required|string|min:1|max:100',
             'propertyAddress' => 'required|string|min:1|max:100',
-            'propertyDescription' => 'required|string|min:1|max:500',
+            'propertyDescription' => 'required|string|min:1|max:200',
             'propertyServices' => 'required|string|min:1|max:100',
             'propertyStatus' => 'required|string|min:1|max:100',
             'propertyAmount' => 'required|integer|min:0',

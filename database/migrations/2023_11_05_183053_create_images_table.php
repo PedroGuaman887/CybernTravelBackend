@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHolidaysTable extends Migration
+class CreateImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateHolidaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('holidays', function (Blueprint $table) {
-            $table->id('idHolidays');
-            $table->date('startDate');
-            $table->date('endDate');
-            $table->string('status');
-            $table->integer('amount');
+        Schema::create('images', function (Blueprint $table) {
+            $table->id('idImage');
+
+            $table->string('imageLink');    
+            $table->string('imageDescription')->nullable();
             $table->unsignedBigInteger('property_id'); 
 
             $table->foreign('property_id')->references('idProperty')->on('properties')->onDelete('cascade');
@@ -26,8 +25,13 @@ class CreateHolidaysTable extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::dropIfExists('holidays');
+        Schema::dropIfExists('images');
     }
 }
