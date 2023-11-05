@@ -44,7 +44,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/images/{idImages}', [ImagesController::class, 'imagesById']);
     Route::post('/images/updateimages/{idImages}', [ImagesController::class, 'updateImages']);
     Route::delete('/images/deleteimages/{idImages}', [ImagesController::class, 'deleteImages']);
-
+ 
     Route::post('/ratings', [RatingsController::class, 'createdRatings']);
     Route::get('/ratings/{idRatings}', [RatingsController::class, 'ratingsById']);
     Route::post('/ratings/updateratings/{idRatings}', [RatingsController::class, 'updateRatings']);

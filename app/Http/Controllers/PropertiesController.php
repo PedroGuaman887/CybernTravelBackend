@@ -54,7 +54,7 @@ class PropertiesController extends Controller
 
         $propertyId = $property->idProperty; 
 
-        $holidays = $request->input('holidays');
+        /*$holidays = $request->input('holidays');
 
         if (!is_array($holidays)) {
             return response()->json([
@@ -77,12 +77,12 @@ class PropertiesController extends Controller
                 ], 201);
             }
             $holiday->save();
-        }
+        }*/
 
         return response()->json([
             'message' => 'successful property registration.',
             'properties' => $property,
-            'holidays' => $holidays,
+            //'holidays' => $holidays,
         ], 201);
     }
 
