@@ -8,7 +8,6 @@ use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\RatingsController;
-use App\Models\Ratings;
 
 /*
 |--------------------------------------------------------------------------
