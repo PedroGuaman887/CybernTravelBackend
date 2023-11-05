@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\HolidaysController;
+use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\RatingsController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,6 +39,16 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/holidays/{idHolidays}', [HolidaysController::class, 'holidaysById']);
     Route::post('/holidays/updateholidays/{idHolidays}', [HolidaysController::class, 'updateHolidays']);
     Route::delete('/holidays/deleteholidays/{idHolidays}', [HolidaysController::class, 'deleteHolidays']);
+
+    Route::post('/images', [ImagesController::class, 'createdImages']);
+    Route::get('/images/{idImages}', [ImagesController::class, 'imagesById']);
+    Route::post('/images/updateimages/{idImages}', [ImagesController::class, 'updateImages']);
+    Route::delete('/images/deleteimages/{idImages}', [ImagesController::class, 'deleteImages']);
+
+    Route::post('/ratings', [RatingsController::class, 'createdRatings']);
+    Route::get('/ratings/{idRatings}', [RatingsController::class, 'ratingsById']);
+    Route::post('/ratings/updateratings/{idRatings}', [RatingsController::class, 'updateRatings']);
+    Route::delete('/ratings/deleteratings/{idRatings}', [RatingsController::class, 'deleteRatings']);
 });
 
 Route::get('/login', function () {
