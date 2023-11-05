@@ -35,10 +35,10 @@ class HolidaysController extends Controller
         ]);
         $holidays->property_id = $request->property_id;
         
-        $holidays->save();
+        $holidays->save(); 
 
 
-        $holidaysId = $holidays->idHolidays;
+        /*$holidaysId = $holidays->idHolidays;
 
         $property = $request->input('property');
 
@@ -46,12 +46,12 @@ class HolidaysController extends Controller
             return response()->json([
                 'message' => 'El campo holidays debe ser un array válido.',
             ], 400);
-        }
+        }*/
 
         return response()->json([
             'message' => 'User successfully holidays',
             'holidays' => $holidays,
-            'properties' => $property,
+            //'properties' => $property,
         ], 201);
     }
 
