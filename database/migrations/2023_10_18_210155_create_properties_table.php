@@ -17,7 +17,6 @@ class CreatePropertiesTable extends Migration
             $table->id('idProperty');
 
             $table->string('propertyName');
-            $table->string('propertyPicture');
             $table->string('propertyOperation');
             $table->string('propertyType');
             $table->string('propertyAddress');

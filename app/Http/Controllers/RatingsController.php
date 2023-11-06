@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class RatingsController extends Controller
 {
-    
+
     public function createdRatings(Request $request)
     {
-        $validator = Validator::make($request->all(), [  
+        $validator = Validator::make($request->all(), [
             'ratingStar' => 'required|integer',
-    
+
         ]);
 
         if ($validator->fails()) {
@@ -25,10 +25,10 @@ class RatingsController extends Controller
 
             'ratingStar' => $request->ratingStar,
             'ratingComment' => $request->ratingComment,
-            
+
         ]);
         $rating->property_id = $request->property_id;
-        
+
         $rating->save();
 
 
@@ -65,7 +65,6 @@ class RatingsController extends Controller
 
                 'properties.idProperty',
                 'properties.propertyName',
-                'properties.propertyPicture',
                 'properties.propertyOperation',
                 'properties.propertyType',
                 'properties.propertyAddress',
@@ -88,7 +87,7 @@ class RatingsController extends Controller
 
         $ratings->ratingStar = $request->ratingStar;
         $ratings->ratingComment = $request->ratingComment;
-        
+
         $ratings->save();
         return $ratings;
     }
