@@ -112,6 +112,24 @@ class PropertiesController extends Controller
         ], 201);
     }
 
+    public function getAllProperties()
+    {
+        /* 
+        obtener datos del alojamiento y la primera imagen registrada del alojamiento
+        SELECT idProperty, propertyName, propertyAmount,propertyAbility, images.imageLink, images.property_id
+        FROM properties
+        JOIN (SELECT * FROM images GROUP BY property_id) as images ON properties.idProperty = images.property_id */
+        DB::statement("SET SQL_MODE=''");
+
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id')
+            ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
+                $join->on('properties.idProperty', '=', 'images.property_id');
+            })
+            ->get();
+
+        return response()->json($properties);
+    }
+
     public function propertiesById(Request $request)
     {
         $properties = DB::table('properties')

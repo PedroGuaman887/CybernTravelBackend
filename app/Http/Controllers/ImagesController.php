@@ -53,7 +53,7 @@ class ImagesController extends Controller
     {
         $images = DB::table('images')
             ->leftJoin('properties', 'properties.idProperty', '=', 'images.property_id')
-            ->where('idImages', '=', $request->idImages)
+            ->where('property_id', '=', $request->idImages)
             ->where(function ($query) {
                 $query->whereNull('images.property_id')
                     ->orWhereNotNull('images.property_id');
