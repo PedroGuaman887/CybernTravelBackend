@@ -12,10 +12,9 @@ class ImagesController extends Controller
 {
     public function createdImages(Request $request)
     {
-        $validator = Validator::make($request->all(), [  
+        $validator = Validator::make($request->all(), [
             'imageLink' => 'required|string|min:0',
-    
-        ]); 
+        ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -25,10 +24,10 @@ class ImagesController extends Controller
 
             'imageLink' => $request->imageLink,
             'imageDescription' => $request->imageDescription,
-            
+
         ]);
         $images->property_id = $request->property_id;
-        
+
         $images->save();
 
 
@@ -53,7 +52,7 @@ class ImagesController extends Controller
     {
         $images = DB::table('images')
             ->leftJoin('properties', 'properties.idProperty', '=', 'images.property_id')
-            ->where('idImages', '=', $request->idImages)
+            ->where('property_id', '=', $request->idImages)
             ->where(function ($query) {
                 $query->whereNull('images.property_id')
                     ->orWhereNotNull('images.property_id');
@@ -65,7 +64,6 @@ class ImagesController extends Controller
 
                 'properties.idProperty',
                 'properties.propertyName',
-                'properties.propertyPicture',
                 'properties.propertyOperation',
                 'properties.propertyType',
                 'properties.propertyAddress',
@@ -88,7 +86,7 @@ class ImagesController extends Controller
 
         $images->imageLink = $request->imageLink;
         $images->imageDescription = $request->imageDescription;
-        
+
         $images->save();
         return $images;
     }

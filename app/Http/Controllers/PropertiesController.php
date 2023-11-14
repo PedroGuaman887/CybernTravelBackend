@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Holidays;
+use App\Models\Images;
 use App\Models\Properties;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +17,6 @@ class PropertiesController extends Controller
     {
         $validator = Validator::make($request->all(), [  //valida los maximos y
             'propertyName' => 'required|string|min:1|max:50',
-            'propertyPicture' => 'required|string|min:1|max:100',
             'propertyOperation' => 'required|string|min:1|max:100',
             'propertyType' => 'required|string|min:1|max:100',
             'propertyAddress' => 'required|string|min:1|max:100',
@@ -25,7 +25,7 @@ class PropertiesController extends Controller
             'propertyStatus' => 'required|string|min:1|max:100',
             'propertyAmount' => 'required|integer|min:0',
             'propertyAbility' => 'required|integer|min:0',
-            'propertyCity' => 'required', 
+            'propertyCity' => 'required',
             'host_id' => 'required|integer|min:0'
         ]);
 
@@ -35,14 +35,13 @@ class PropertiesController extends Controller
 
         $property = new properties([
             'propertyName' => $request->propertyName,
-            'propertyPicture' => $request->propertyPicture,
             'propertyOperation' => $request->propertyOperation,
             'propertyType' => $request->propertyType,
             'propertyAddress' => $request->propertyAddress,
             'propertyDescription' => $request->propertyDescription,
             'propertyServices' => $request->propertyServices,
             'propertyStatus' => $request->propertyStatus,
-            'propertyAmount' => $request->propertyAmount, 
+            'propertyAmount' => $request->propertyAmount,
             'propertyCity' => $request->propertyCity,
             'propertyAbility' => $request->propertyAbility,
 
@@ -52,9 +51,9 @@ class PropertiesController extends Controller
         $property->save();
 
 
-        $propertyId = $property->idProperty; 
+        $propertyId = $property->idProperty;
 
-        /*$holidays = $request->input('holidays');
+        $holidays = $request->input('holidays');
 
         if (!is_array($holidays)) {
             return response()->json([
@@ -66,6 +65,7 @@ class PropertiesController extends Controller
             $holiday = new Holidays([
                 'startDate' => $holidayData['startDate'],
                 'endDate' => $holidayData['endDate'],
+                'status' => $holidayData['status'],
                 'amount' => $holidayData['amount'],
             ]);
             if (!empty($propertyId)) {
@@ -77,24 +77,68 @@ class PropertiesController extends Controller
                 ], 201);
             }
             $holiday->save();
-        }*/
+        }
+        $images =  $request->input('images');
+
+        if (!is_array($images)) {
+            return response()->json([
+                'message' => 'El campo images debe ser un array válido.',
+            ], 400);
+        }
+
+        foreach ($images as $image) {
+            $image_property = new Images([
+                'imageLink' => $image['imageLink'],
+                'imageDescription' => $image['imageDescription'],
+            ]);
+            if (!empty($propertyId)) {
+                $image_property->property_id = $propertyId;
+                $image_property->save();
+            } else {
+                return response()->json([
+                    'message' => 'El ID de la propiedad no existe',
+                    'propertyId' => $propertyId,
+                ], 400); // Usar un código de respuesta 400 para errores
+            }
+            $image_property->save();
+        }
+
 
         return response()->json([
             'message' => 'successful property registration.',
             'properties' => $property,
-            //'holidays' => $holidays,
+            'holidays' => $holidays,
+            'Images_Property' => $images,
         ], 201);
+    }
+
+    public function getAllProperties()
+    {
+        /* 
+        obtener datos del alojamiento y la primera imagen registrada del alojamiento
+        SELECT idProperty, propertyName, propertyAmount,propertyAbility, images.imageLink, images.property_id
+        FROM properties
+        JOIN (SELECT * FROM images GROUP BY property_id) as images ON properties.idProperty = images.property_id */
+        DB::statement("SET SQL_MODE=''");
+
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertydescription')
+            ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
+                $join->on('properties.idProperty', '=', 'images.property_id');
+            })
+            ->get();
+
+        return response()->json($properties);
     }
 
     public function propertiesById(Request $request)
     {
         $properties = DB::table('properties')
-        ->leftJoin('users', 'users.idUser', '=', 'properties.host_id')
-        ->where('idProperty', '=', $request->idProperty)
-        ->where(function ($query) {
-            $query->whereNull('properties.host_id')
-                ->orWhereNotNull('properties.host_id');
-        })
+            ->leftJoin('users', 'users.idUser', '=', 'properties.host_id')
+            ->where('idProperty', '=', $request->idProperty)
+            ->where(function ($query) {
+                $query->whereNull('properties.host_id')
+                    ->orWhereNotNull('properties.host_id');
+            })
             ->select(
 
                 'users.idUser',
@@ -105,7 +149,6 @@ class PropertiesController extends Controller
 
                 'properties.idProperty',
                 'properties.propertyName',
-                'properties.propertyPicture',
                 'properties.propertyOperation',
                 'properties.propertyType',
                 'properties.propertyAddress',
@@ -127,7 +170,6 @@ class PropertiesController extends Controller
         $properties = properties::find($id);
 
         $properties->propertyName = $request->propertyName;
-        $properties->propertyPicture = $request->propertyPicture;
         $properties->propertyOperation = $request->propertyOperation;
         $properties->propertyType = $request->propertyType;
         $properties->propertyAddress = $request->propertyAddress;

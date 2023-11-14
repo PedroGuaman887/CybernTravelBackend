@@ -34,6 +34,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/properties/{idProperty}', [PropertiesController::class, 'propertiesById']);
     Route::post('/properties/updateProperties/{idProperty}', [PropertiesController::class, 'updateProperties']);
     Route::delete('/properties/deleteProperties/{idProperty}', [PropertiesController::class, 'deleteProperties']);
+    Route::get('/getAllProperties', [PropertiesController::class, 'getAllProperties']);
 
     Route::post('/holidays', [HolidaysController::class, 'createdHolidays']);
     Route::get('/holidays/{idHolidays}', [HolidaysController::class, 'holidaysById']);

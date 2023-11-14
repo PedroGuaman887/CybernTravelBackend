@@ -15,11 +15,11 @@ class HolidaysController extends Controller
 {
     public function createdHolidays(Request $request)
     {
-        $validator = Validator::make($request->all(), [  
-           // 'startDate' => 'date_format:Y-m-d',
+        $validator = Validator::make($request->all(), [
+            // 'startDate' => 'date_format:Y-m-d',
             //'endDate' => 'date_format:Y-m-d', 
             'amount' => 'required|integer|min:0',
-    
+
         ]);
 
         if ($validator->fails()) {
@@ -34,8 +34,8 @@ class HolidaysController extends Controller
             'status' => $request->status,
         ]);
         $holidays->property_id = $request->property_id;
-        
-        $holidays->save(); 
+
+        $holidays->save();
 
 
         /*$holidaysId = $holidays->idHolidays;
@@ -73,7 +73,6 @@ class HolidaysController extends Controller
 
                 'properties.idProperty',
                 'properties.propertyName',
-                'properties.propertyPicture',
                 'properties.propertyOperation',
                 'properties.propertyType',
                 'properties.propertyAddress',
@@ -97,7 +96,7 @@ class HolidaysController extends Controller
         $holidays->endDate = $request->endDate;
         $holidays->amount = $request->amount;
         $holidays->status = $request->status;
-        
+
         $holidays->save();
         return $holidays;
     }
@@ -113,4 +112,3 @@ class HolidaysController extends Controller
         }
     }
 }
-

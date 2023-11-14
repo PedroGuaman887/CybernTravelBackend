@@ -17,7 +17,6 @@ class Properties extends Model
     protected $fillable = [
         'idProperty',
         'propertyName',
-        'propertyPicture',
         'propertyOperation',
         'propertyType',
         'propertyAddress',
@@ -27,7 +26,7 @@ class Properties extends Model
         'propertyAmount',
         'propertyAbility',
         'propertyCity',
-        'host_id', 
+        'host_id',
     ];
 
     public function holidays()
