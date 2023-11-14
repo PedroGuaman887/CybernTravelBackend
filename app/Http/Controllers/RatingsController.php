@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+ 
 use App\Models\Ratings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,18 +34,18 @@ class RatingsController extends Controller
 
         $ratingId = $rating->idRatings;
 
-        $property = $request->input('property');
+        /*$property = $request->input('property');
 
         if (!is_array($property)) {
             return response()->json([
                 'message' => 'El campo rating debe ser un array válido.',
             ], 400);
-        }
+        }*/
 
         return response()->json([
             'message' => 'User successfully rating',
             'images' => $rating,
-            'properties' => $property,
+            //'properties' => $property,
         ], 201);
     }
 

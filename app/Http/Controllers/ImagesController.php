@@ -14,7 +14,6 @@ class ImagesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'imageLink' => 'required|string|min:0',
-
         ]);
 
         if ($validator->fails()) {
@@ -34,18 +33,18 @@ class ImagesController extends Controller
 
         $imagesId = $images->idImages;
 
-        $property = $request->input('property');
+        /*$property = $request->input('property');
 
         if (!is_array($property)) {
             return response()->json([
                 'message' => 'El campo images debe ser un array válido.',
             ], 400);
-        }
+        }*/
 
         return response()->json([
             'message' => 'User successfully images',
             'images' => $images,
-            'properties' => $property,
+            //'properties' => $property,
         ], 201);
     }
 
