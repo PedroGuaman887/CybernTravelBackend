@@ -130,24 +130,37 @@ class PropertiesController extends Controller
         return response()->json($properties);
     }
 
+
+
     public function propertiesById(Request $request)
     {
         $properties = DB::table('properties')
             ->leftJoin('users', 'users.idUser', '=', 'properties.host_id')
+            ->leftJoin(DB::raw('(SELECT property_id, GROUP_CONCAT(idImages) as idImages, GROUP_CONCAT(imageLink) as imageLink, GROUP_CONCAT(imageDescription) as imageDescription FROM images GROUP BY property_id) as images'), 'images.property_id', '=', 'properties.idProperty')
+            ->leftJoin(DB::raw('(SELECT property_id, GROUP_CONCAT(idHolidays) as idHolidays, GROUP_CONCAT(startDate) as startDate, GROUP_CONCAT(endDate) as endDate, GROUP_CONCAT(amount) as amount, GROUP_CONCAT(status) as status FROM holidays GROUP BY property_id) as holidays'), 'holidays.property_id', '=', 'properties.idProperty')
             ->where('idProperty', '=', $request->idProperty)
             ->where(function ($query) {
                 $query->whereNull('properties.host_id')
                     ->orWhereNotNull('properties.host_id');
             })
             ->select(
-
+                'properties.idProperty',
                 'users.idUser',
                 'users.fullName',
                 'users.email',
                 'users.phoneNumber',
                 'users.birthDate',
-
-                'properties.idProperty',
+    
+                'images.idImages',
+                'images.imageLink',
+                'images.imageDescription',
+    
+                'holidays.idHolidays',
+                'holidays.startDate',
+                'holidays.endDate',
+                'holidays.amount',
+                'holidays.status',
+    
                 'properties.propertyName',
                 'properties.propertyOperation',
                 'properties.propertyType',
@@ -158,12 +171,40 @@ class PropertiesController extends Controller
                 'properties.propertyAmount',
                 'properties.propertyAbility',
                 'properties.propertyCity',
-                'properties.host_id',
+                'properties.host_id'
+            )
+            ->groupBy(
+                'properties.idProperty',
+                'users.idUser',
+                'users.fullName',
+                'users.email',
+                'users.phoneNumber',
+                'users.birthDate',
+                'images.idImages',
+                'images.imageLink',
+                'images.imageDescription',
+                'holidays.idHolidays',
+                'holidays.startDate',
+                'holidays.endDate',
+                'holidays.amount',
+                'holidays.status',
+                'properties.propertyName',
+                'properties.propertyOperation',
+                'properties.propertyType',
+                'properties.propertyAddress',
+                'properties.propertyDescription',
+                'properties.propertyServices',
+                'properties.propertyStatus',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',
+                'properties.host_id'
             )
             ->get();
-
+    
         return $properties;
     }
+    
 
     public function updateProperties(Request $request, $id)
     {
