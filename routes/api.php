@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\FilterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/properties/updateProperties/{idProperty}', [PropertiesController::class, 'updateProperties']);
     Route::delete('/properties/deleteProperties/{idProperty}', [PropertiesController::class, 'deleteProperties']);
     Route::get('/getAllProperties', [PropertiesController::class, 'getAllProperties']);
+    //publicaciones de un usuario manejarlo con api
 
     Route::post('/holidays', [HolidaysController::class, 'createdHolidays']);
     Route::get('/holidays/{idHolidays}', [HolidaysController::class, 'holidaysById']);
@@ -45,11 +47,14 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/images/{idImages}', [ImagesController::class, 'imagesById']);
     Route::post('/images/updateimages/{idImages}', [ImagesController::class, 'updateImages']);
     Route::delete('/images/deleteimages/{idImages}', [ImagesController::class, 'deleteImages']);
- 
+
     Route::post('/ratings', [RatingsController::class, 'createdRatings']);
     Route::get('/ratings/{idRatings}', [RatingsController::class, 'ratingsById']);
     Route::post('/ratings/updateratings/{idRatings}', [RatingsController::class, 'updateRatings']);
     Route::delete('/ratings/deleteratings/{idRatings}', [RatingsController::class, 'deleteRatings']);
+
+    Route::get('/getPropertiesWithCity', [FilterController::class, 'getAllPropertiesWithCity']);
+    Route::get('/getUserPosts/{user}', [PropertiesController::class, 'getUserPosts']);
 });
 
 Route::get('/login', function () {
