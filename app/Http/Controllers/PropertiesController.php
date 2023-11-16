@@ -178,7 +178,7 @@ class PropertiesController extends Controller
             )
             ->get();
 
-        $images = DB::table('Images')
+        $images = DB::table('images')
             ->where('property_id', $id)
             ->select('imageLink', 'imageDescription')
             ->get();
