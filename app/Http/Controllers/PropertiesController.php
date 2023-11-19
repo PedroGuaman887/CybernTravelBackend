@@ -212,13 +212,14 @@ class PropertiesController extends Controller
 
         $servicesArray = [];
 
-        // Itera sobre la colección para acceder a cada elemento
         foreach ($services as $service) {
-            // Accede a la propiedad "propertyServices" de cada elemento
             $propertyServices = $service->propertyServices;
 
-            // Puedes convertir la cadena en un array utilizando explode
-            $servicesArray[] = explode(', ', $propertyServices);
+            $servicesList = explode(', ', $propertyServices);
+
+            foreach ($servicesList as $singleService) {
+                $servicesArray[] = ['service' => $singleService];
+            }
         }
 
         $images = DB::table('images')
