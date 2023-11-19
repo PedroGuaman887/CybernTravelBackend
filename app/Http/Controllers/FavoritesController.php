@@ -30,7 +30,7 @@ class FavoritesController extends Controller
         $favorites->save();
 
         return response()->json([
-            'message' => 'User successfully images',
+            'message' => 'Favorite registered successfully',
             'favorites' => $favorites,
         ], 201);
     }
