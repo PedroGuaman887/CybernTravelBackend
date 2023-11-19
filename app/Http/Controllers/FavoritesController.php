@@ -39,6 +39,7 @@ class FavoritesController extends Controller
     {
         $favorites = DB::table('favorites')
             ->leftJoin('users', 'users.idUser', '=', 'favorites.user_id')
+        ->leftJoin('properties', 'properties.idProperty', '=', 'favorites.property_id')
             ->where('favorites.user_id', '=', $user_id)
             ->where(function ($query) {
                 $query->whereNull('favorites.user_id')
