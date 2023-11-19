@@ -33,7 +33,9 @@ class PropertiesController extends Controller
                 'propertyBeds' => 'required|integer|min:1',
                 'propertyRules' => 'required|string',
                 'propertySecurity' => 'required|string',
-                'host_id' => 'required|integer|min:0'
+                'host_id' => 'required|integer|min:0',
+                'holidays' => 'required',
+                'images' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -193,9 +195,31 @@ class PropertiesController extends Controller
                 'properties.propertyAmount',
                 'properties.propertyAbility',
                 'properties.propertyCity',
+                'propertyCroquis',
+                'propertyRooms',
+                'propertyBathrooms',
+                'propertyBeds',
+                'propertyRules',
+                'propertySecurity',
                 'properties.host_id',
             )
             ->get();
+
+        $services = DB::table('properties')
+            ->leftJoin('users', 'users.idUser', '=', 'properties.host_id')
+            ->where('idProperty', '=', $id)->select('propertyServices')->get();
+
+
+        $servicesArray = [];
+
+        // Itera sobre la colección para acceder a cada elemento
+        foreach ($services as $service) {
+            // Accede a la propiedad "propertyServices" de cada elemento
+            $propertyServices = $service->propertyServices;
+
+            // Puedes convertir la cadena en un array utilizando explode
+            $servicesArray[] = explode(', ', $propertyServices);
+        }
 
         $images = DB::table('images')
             ->where('property_id', $id)
@@ -205,6 +229,7 @@ class PropertiesController extends Controller
         return response()->json([
             'properties' => $properties,
             'Images' => $images,
+            'sevices' => $servicesArray
         ]);
         //return $properties;
     }
