@@ -58,6 +58,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/getUserPosts/{user}', [PropertiesController::class, 'getUserPosts']);
 
     Route::post('/favorites', [FavoritesController::class, 'createdFavorites']);
+    Route::get('/favorites/favoritesByUser/{user_id}', [FavoritesController::class, 'favoritesOfUser']);
     Route::delete('/favorites/{idFavorites}', [FavoritesController::class, 'destroy']);
 });
 
