@@ -26,6 +26,12 @@ class Properties extends Model
         'propertyAmount',
         'propertyAbility',
         'propertyCity',
+        'propertyCroquis',
+        'propertyRooms',
+        'propertyBathrooms',
+        'propertyBeds',
+        'propertyRules',
+        'propertySecurity',
         'host_id',
     ];
 
