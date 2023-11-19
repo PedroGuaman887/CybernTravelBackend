@@ -35,6 +35,43 @@ class FavoritesController extends Controller
         ], 201);
     }
 
+    public function favoritesOfUser($user_id)
+    {
+        $favorites = DB::table('favorites')
+            ->leftJoin('users', 'users.idUser', '=', 'favorites.user_id')
+            ->where('favorites.user_id', '=', $user_id)
+            ->where(function ($query) {
+                $query->whereNull('favorites.user_id')
+                    ->orWhereNotNull('favorites.user_id');
+            })
+            ->select(
+                'favorites.idFavorites', 
+                'favorites.dateSaved',
+
+                'users.idUser',
+                'users.fullName',
+                'users.email',
+                'users.phoneNumber',
+                'users.birthDate',
+                
+                'properties.idProperty',
+                'properties.propertyName',
+                'properties.propertyOperation',
+                'properties.propertyType',
+                'properties.propertyAddress',
+                'properties.propertyDescription',
+                'properties.propertyServices',
+                'properties.propertyStatus',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',)
+            ->get();
+
+        return $favorites;
+    }
+
+
+
     public function destroy(Request $request)
     {
         $deleted = Favorites::destroy($request->idFavorites);
