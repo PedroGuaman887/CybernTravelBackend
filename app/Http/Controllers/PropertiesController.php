@@ -60,7 +60,7 @@ class PropertiesController extends Controller
                 'propertyRules' => $request->propertyRules,
                 'propertySecurity' => $request->propertySecurity,
 
-            ]);
+            ]); 
             $property->host_id = $request->host_id;
             //$property = Properties::create($request->all());
             $property->save();

@@ -20,7 +20,7 @@ class CreateRequestsTable extends Migration
             $table->date('dateRequest');
             $table->string('status');
             $table->unsignedBigInteger('idProperty');
-            $table->unsignedBigInteger('idUser');
+            $table->unsignedBigInteger('idUser');  
             $table->foreign('idProperty')->references('idProperty')->on('properties');
             $table->foreign('idUser')->references('idUser')->on('users');
             $table->timestamps();
