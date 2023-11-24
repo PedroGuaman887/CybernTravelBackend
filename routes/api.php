@@ -10,6 +10,7 @@ use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\RatingsController;
+use App\Http\Controllers\RequestsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,14 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/favorites', [FavoritesController::class, 'createdFavorites']);
     Route::get('/favorites/favoritesByUser/{user_id}', [FavoritesController::class, 'favoritesOfUser']);
     Route::delete('/favorites/{idFavorites}', [FavoritesController::class, 'destroy']);
+
+    Route::post('/requests', [RequestsController::class, 'createdRequests']);
+    Route::post('/requests/{idRequests}', [RequestsController::class, 'updateRequests']);
+    Route::get('/requests/{idRequests}', [RequestsController::class, 'requestsById']);
+    Route::get('/requests', [RequestsController::class, 'getAllRequests']);
+    Route::delete('/delete/requests/{idRequests}', [RequestsController::class, 'deleteRequests']);
+
+
 });
 
 Route::get('/login', function () {
