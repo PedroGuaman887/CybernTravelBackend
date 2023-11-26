@@ -16,8 +16,6 @@ class RequestsController extends Controller
     public function createdRequests(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'startDate' => 'date_format:Y-m-d',
-            'endDate' => 'date_format:Y-m-d',
             'status' => 'required|string',
         ]);
 
@@ -25,8 +23,9 @@ class RequestsController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
+        $currentDateTime = now()->setTimezone('America/La_Paz');
         // Sumar un día a la fecha
-        $dateRequest = Carbon::parse($request->dateRequest)->addDay();
+        $dateRequest = $currentDateTime->addDay();
 
         $newRequests = new Requests([
             'startDate' => $request->startDate,
@@ -46,37 +45,50 @@ class RequestsController extends Controller
         ], 201);
     }
 
-        public function updateRequests(Request $request, $id)
+    public function updateRequests(Request $request, $id)
     {
         $requests = Requests::find($id);
-
+    
+        // Verificar si la fecha en dateRequest es mayor que la fecha actual
+        $currentDateTime = now()->setTimezone('America/La_Paz');
+        $dateRequest = Carbon::parse($request->dateRequest);
+    
+        if ($dateRequest <= $currentDateTime) {
+            // La fecha en dateRequest es menor o igual a la fecha actual, eliminar y retornar un mensaje
+            $requests->delete();
+    
+            return response()->json([
+                'message' => 'User successfully deleted due to dateRequest being less than or equal to current date',
+            ], 200);
+        }
+    
+        // Si la fecha en dateRequest es mayor que la fecha actual, proceder con la actualización
         $requests->startDate = $request->startDate;
         $requests->endDate = $request->endDate;
-        $requests->dateRequest = $request->dateRequest;
         $requests->status = $request->status;
-
+    
         $requests->save();
-
+    
         // Verificar si el estado es 'Pagado'
         if ($request->status === 'Pagado') {
             // Crear una nueva reserva
             $newReservation = new Reservations([
                 'startDate' => $request->startDate,
                 'endDate' => $request->endDate,
-                'datePayment' => now(), // Puedes ajustar esto según tu lógica
+                'datePayment' => now()->setTimezone('America/La_Paz')->format('Y-m-d H:i:s'), // Puedes ajustar esto según tu lógica
                 'status' => 'nueva', // Iniciar el estado con 'nueva'
                 'idRequests' => $id, // Utilizar el ID de la solicitud actual
             ]);
-
+    
             $newReservation->save();
-
+    
             return response()->json([
                 'message' => 'User successfully updated and reservation created',
                 'requests' => $requests,
                 'reservation' => $newReservation,
             ], 201);
         }
-
+    
         return response()->json([
             'message' => 'User successfully updated, but no reservation created',
             'requests' => $requests,
