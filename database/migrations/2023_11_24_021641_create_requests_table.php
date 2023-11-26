@@ -17,7 +17,7 @@ class CreateRequestsTable extends Migration
             $table->id('idRequests');
             $table->date('startDate');
             $table->date('endDate');
-            $table->date('dateRequest');
+            $table->dateTime('dateRequest');
             $table->string('status');
             $table->unsignedBigInteger('idProperty');
             $table->unsignedBigInteger('idUser');  

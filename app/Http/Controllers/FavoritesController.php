@@ -11,13 +11,6 @@ class FavoritesController extends Controller
 {
     public function createdFavorites(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'dateSaved' => 'required|string|min:0',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
 
         $favorites = new Favorites([
 

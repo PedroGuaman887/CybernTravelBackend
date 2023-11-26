@@ -12,12 +12,17 @@ class Requests extends Model
     protected $fillable=[
         'idRequests',
         'startDate',
-        'enDate',
+        'endDate',
         'dateRequest',
         'status',
         'idUser',
         'idProperty',
     ];
+
+    public function favorites()
+    {
+        return $this->belongsTo(Favorites::class, 'idRequests');
+    }
 
     public function user()
     {
