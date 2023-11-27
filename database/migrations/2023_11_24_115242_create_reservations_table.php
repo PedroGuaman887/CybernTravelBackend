@@ -19,10 +19,10 @@ class CreateReservationsTable extends Migration
             $table->string('status');
             $table->date('startDate');
             $table->date('endDate');
-            $table->unsignedBigInteger('idRequests');
-            $table->foreign('idRequests')->references('idRequests')->on('requests');
-
-
+            $table->unsignedBigInteger('idProperty');
+            $table->unsignedBigInteger('idUser');  
+            $table->foreign('idProperty')->references('idProperty')->on('properties');
+            $table->foreign('idUser')->references('idUser')->on('users');
             $table->timestamps();
         });
     }

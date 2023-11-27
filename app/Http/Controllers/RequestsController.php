@@ -31,7 +31,7 @@ class RequestsController extends Controller
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
             'dateRequest' => $dateRequest,
-            'status' => $request->status,
+            'status' => 'No Confirmado',
         ]);
 
         $newRequests->idProperty = $request->idProperty;
@@ -77,7 +77,8 @@ class RequestsController extends Controller
                 'endDate' => $request->endDate,
                 'datePayment' => now()->setTimezone('America/La_Paz')->format('Y-m-d H:i:s'), // Puedes ajustar esto según tu lógica
                 'status' => 'nueva', // Iniciar el estado con 'nueva'
-                'idRequests' => $id, // Utilizar el ID de la solicitud actual
+                'idUser'=> $request->idUser,
+                'idProperty'=> $request->idProperty, // Utilizar el ID de la solicitud actual
             ]);
     
             $newReservation->save();
