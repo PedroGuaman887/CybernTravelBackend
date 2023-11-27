@@ -15,7 +15,8 @@ class Reservations extends Model
         'status',
         'startDate',
         'endDate',
-        'idRequests',
+        'idUser',
+        'idProperty',
     ];
 
 
@@ -25,4 +26,13 @@ class Reservations extends Model
         return $this->belongsTo(Requests::class, 'idRequests');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idUser');
+    }
+
+    public function property()
+    {
+        return $this->belongsTo(Properties::class, 'idProperty');
+    }
 }
