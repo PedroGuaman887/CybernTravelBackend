@@ -24,7 +24,7 @@ class FilterController extends Controller
         }
 
         if (empty($city)) {
-            $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertydescription', 'propertyCity', 'propertyStatus')
+            $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertyDescription', 'propertyCity', 'propertyStatus')
                 ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                     $join->on('properties.idProperty', '=', 'images.property_id');
                 })
@@ -37,7 +37,7 @@ class FilterController extends Controller
         }
 
         if (empty($hosts)) {
-            $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertydescription', 'propertyCity', 'propertyStatus')
+            $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertyDescription', 'propertyCity', 'propertyStatus')
                 ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                     $join->on('properties.idProperty', '=', 'images.property_id');
                 })
@@ -49,12 +49,12 @@ class FilterController extends Controller
             return response()->json($properties);
         }
 
-        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertydescription', 'propertyCity', 'propertyStatus')
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertyDescription', 'propertyCity', 'propertyStatus')
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
             ->where('propertycity', 'LIKE', '%' . $city . '%')
-            ->where('propertyStatus', 'disponible')
+            ->where('propertyStatus', 'Publicado')
             ->where('propertyAbility', $hosts)
             //->whereBetween('fecha', ['2022-01-01', '2022-01-31'])
             ->get();

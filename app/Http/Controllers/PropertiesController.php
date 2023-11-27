@@ -146,6 +146,7 @@ class PropertiesController extends Controller
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
+            ->where('propertyStatus', 'Publicado')
             ->get();
 
         return response()->json($properties);
