@@ -60,7 +60,7 @@ class PropertiesController extends Controller
                 'propertyRules' => $request->propertyRules,
                 'propertySecurity' => $request->propertySecurity,
 
-            ]); 
+            ]);
             $property->host_id = $request->host_id;
             //$property = Properties::create($request->all());
             $property->save();
@@ -139,14 +139,28 @@ class PropertiesController extends Controller
         obtener datos del alojamiento y la primera imagen registrada del alojamiento
         SELECT idProperty, propertyName, propertyAmount,propertyAbility, images.imageLink, images.property_id
         FROM properties
-        JOIN (SELECT * FROM images GROUP BY property_id) as images ON properties.idProperty = images.property_id */
+        JOIN (SELECT * FROM images GROUP BY property_id) as images ON properties.idProperty = images.property_id 
+        */
         DB::statement("SET SQL_MODE=''");
+        $currentDate = "2023-05-10";
 
-        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription')
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status')
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
-            ->where('propertyStatus', 'Publicado')
+            ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty')
+            ->where(function ($query) use ($currentDate) {
+                $query->whereNull('status_properties.startDate')
+                    ->orWhere('status_properties.startDate', '>', $currentDate);
+            })
+            ->orWhere(function ($query) use ($currentDate) {
+                $query->whereNull('status_properties.endDate')
+                    ->orWhere('status_properties.endDate', '<', $currentDate);
+            })
+            ->orWhere(function ($query) use ($currentDate) {
+                $query->where('status_properties.status', '!=', 'Pausado')
+                    ->orWhereNull('status_properties.status');
+            })
             ->get();
 
         return response()->json($properties);

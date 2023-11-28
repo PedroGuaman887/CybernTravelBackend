@@ -11,6 +11,7 @@ use App\Http\Controllers\HolidaysController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\RequestsController;
+use App\Http\Controllers\StatusPropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +69,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/requests', [RequestsController::class, 'getAllRequests']);
     Route::delete('/delete/requests/{idRequests}', [RequestsController::class, 'deleteRequests']);
 
-
+    Route::post('/StatusPause', [StatusPropertyController::class, 'createStatusPause']);
+    Route::delete('/deleteStatusProperties/{idProperty}', [StatusPropertyController::class, 'DeleteStatusProperty']);
 });
 
 Route::get('/login', function () {
