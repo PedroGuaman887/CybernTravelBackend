@@ -15,12 +15,15 @@ class CreateRatingsTable extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id('idRatings');
-
-            $table->integer('ratingStar');    
+            $table->integer('ratingCleaning');    
+            $table->integer('ratingPunctuality'); 
+            $table->integer('ratingFriendliness'); 
             $table->string('ratingComment')->nullable();
-            $table->unsignedBigInteger('property_id'); 
+            $table->unsignedBigInteger('idProperty'); 
+            $table->unsignedBigInteger('idUser');  
+            $table->foreign('idUser')->references('idUser')->on('users');
 
-            $table->foreign('property_id')->references('idProperty')->on('properties')->onDelete('cascade');
+            $table->foreign('idProperty')->references('idProperty')->on('properties')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -35,3 +38,4 @@ class CreateRatingsTable extends Migration
         Schema::dropIfExists('ratings');
     }
 }
+

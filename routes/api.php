@@ -52,7 +52,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::delete('/images/deleteimages/{idImages}', [ImagesController::class, 'deleteImages']);
 
     Route::post('/ratings', [RatingsController::class, 'createdRatings']);
-    Route::get('/ratings/{idRatings}', [RatingsController::class, 'ratingsById']);
+    Route::get('/ratings/{idProperty}', [RatingsController::class, 'ratingsByIdProperty']);
     Route::post('/ratings/updateratings/{idRatings}', [RatingsController::class, 'updateRatings']);
     Route::delete('/ratings/deleteratings/{idRatings}', [RatingsController::class, 'deleteRatings']);
 

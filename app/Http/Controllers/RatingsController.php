@@ -13,8 +13,9 @@ class RatingsController extends Controller
     public function createdRatings(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ratingStar' => 'required|integer',
-
+            'ratingCleaning'=> 'required|integer',    
+            'ratingPunctuality' => 'required|integer' ,
+            'ratingFriendliness'=> 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -22,47 +23,35 @@ class RatingsController extends Controller
         }
 
         $rating = new ratings([
-
-            'ratingStar' => $request->ratingStar,
+            'ratingCleaning' => $request->ratingCleaning,
+            'ratingPunctuality' => $request->ratingPunctuality,
+            'ratingFriendliness' => $request->ratingFriendliness,
             'ratingComment' => $request->ratingComment,
-
         ]);
-        $rating->property_id = $request->property_id;
+        $rating->idProperty = $request->idProperty;
+        $rating->idUser = $request->idUser;
 
         $rating->save();
 
-
-        $ratingId = $rating->idRatings;
-
-        /*$property = $request->input('property');
-
-        if (!is_array($property)) {
-            return response()->json([
-                'message' => 'El campo rating debe ser un array válido.',
-            ], 400);
-        }*/
-
         return response()->json([
             'message' => 'User successfully rating',
-            'images' => $rating,
-            //'properties' => $property,
+            'rating' => $rating,
         ], 201);
     }
 
-    public function ratingsById(Request $request)
+    public function ratingsByIdProperty(Request $request)
     {
-        $rating = DB::table('ratings')
-            ->leftJoin('properties', 'properties.idProperty', '=', 'ratings.property_id')
-            ->where('idRatings', '=', $request->idRatings)
-            ->where(function ($query) {
-                $query->whereNull('ratings.property_id')
-                    ->orWhereNotNull('ratings.property_id');
-            })
+        $propertyId = $request->idProperty;
+
+        $ratings = DB::table('ratings')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'ratings.idProperty')
+            ->where('properties.idProperty', '=', $propertyId)
             ->select(
                 'ratings.idRatings',
-                'ratings.ratingStar',
                 'ratings.ratingComment',
-
+                'ratings.ratingPunctuality',
+                'ratings.ratingCleaning',
+                'ratings.ratingFriendliness',
                 'properties.idProperty',
                 'properties.propertyName',
                 'properties.propertyOperation',
@@ -78,18 +67,31 @@ class RatingsController extends Controller
             )
             ->get();
 
-        return $rating;
-    }
+        $totalPunctuality = 0;
+        $totalCleaning = 0;
+        $totalFriendliness = 0;
+        $totalRatings = count($ratings);
 
-    public function updateRatings(Request $request, $id)
-    {
-        $ratings = Ratings::find($id);
+        foreach ($ratings as $rating) {
+            $totalPunctuality += $rating->ratingPunctuality;
+            $totalCleaning += $rating->ratingCleaning;
+            $totalFriendliness += $rating->ratingFriendliness;
+        }
 
-        $ratings->ratingStar = $request->ratingStar;
-        $ratings->ratingComment = $request->ratingComment;
+        $averagePunctuality = $totalPunctuality / $totalRatings;
+        $averageCleaning = $totalCleaning / $totalRatings;
+        $averageFriendliness = $totalFriendliness / $totalRatings;
 
-        $ratings->save();
-        return $ratings;
+        $response = [
+            'ratings' => $ratings,
+            'averageRatings' => [
+                'averagePunctuality' => $averagePunctuality,
+                'averageCleaning' => $averageCleaning,
+                'averageFriendliness' => $averageFriendliness,
+            ],
+        ];
+
+        return response()->json($response);
     }
 
     public function deleteRatings(Request $request)
