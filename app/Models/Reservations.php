@@ -11,20 +11,12 @@ class Reservations extends Model
     protected $primaryKey = 'idReservations';
     protected $fillable=[
         'idReservations',
-        'datePayment',
-        'status',
+        'totalAmount',
         'startDate',
         'endDate',
         'idUser',
         'idProperty',
     ];
-
-
-
-    public function request()
-    {
-        return $this->belongsTo(Requests::class, 'idRequests');
-    }
 
     public function user()
     {

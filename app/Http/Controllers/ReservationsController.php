@@ -15,23 +15,40 @@ class ReservationsController extends Controller
     public function createdReservation(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            //'startDate' => 'date_format:Y-m-d',
-            //'endDate' => 'date_format:Y-m-d',
-            //'datePayment' => 'date_format:Y-m-d',
-            'status' => 'required|string',
+            'startDate' => 'date_format:Y-m-d',
+            'endDate' => 'date_format:Y-m-d',
+            'totalAmount' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
+        $existingReservation = Reservations::where('idProperty', $request->idProperty)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('startDate', [$request->startDate, $request->endDate])
+                    ->orWhereBetween('endDate', [$request->startDate, $request->endDate])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('startDate', '<=', $request->startDate)
+                            ->where('endDate', '>=', $request->endDate);
+                    });
+            })
+            ->first();
+
+        if ($existingReservation) {
+            return response()->json(['error' => 'There is already a reservation in the specified date range.'], 400);
+        }
+
         $newReservation = new Reservations([
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
-            'datePayment' => $request->datePayment,
-            'status' => $request->status,
-            'idRequests' => $request->idRequests,
+            'totalAmount' => $request->totalAmount,
         ]);
+
+        $newReservation->idProperty = $request->idProperty;
+        $newReservation->idUser = $request->idUser;
+
+        $newReservation->save();
 
         return response()->json([
             'message' => 'User successfully reservation',
@@ -45,9 +62,7 @@ class ReservationsController extends Controller
 
         $reservations->startDate = $request->startDate;
         $reservations->endDate = $request->endDate;
-        $reservations->datePayment = $request->dateRequest;
-        $reservations->status = $request->status;
-        $reservations->idRequests = $request->idRequests;
+        $reservations->totalAmount = $request->totalAmount;
         
         $reservations->save();
         return $reservations;
@@ -67,8 +82,7 @@ class ReservationsController extends Controller
                 'reservations.idReservations',
                 'reservations.startDate', 
                 'reservations.endDate',
-                'reservations.datePayment', 
-                'reservations.status', 
+                'reservations.totalAmount', 
 
                 'users.idUser', 
                 'users.fullName', 

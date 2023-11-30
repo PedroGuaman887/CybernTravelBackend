@@ -15,9 +15,8 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id('idReservations');
-            $table->date('datePayment');
-            $table->string('status');
             $table->date('startDate');
+            $table->integer('totalAmount');
             $table->date('endDate');
             $table->unsignedBigInteger('idProperty');
             $table->unsignedBigInteger('idUser');  
