@@ -12,12 +12,22 @@ class Ratings extends Model
 
     protected $fillable = [
         'idRatings',
-        'ratingStar',
+        'ratingCleaning',    
+        'ratingPunctuality' ,
+        'ratingFriendliness',
         'ratingComment',
+        'idUser',
+        'idProperty',
     ];
 
-    public function properties()
+    public function user()
     {
-        return $this->belongsToMany(Properties::class, 'properties_ratings', 'rating_id', 'property_id');
+        return $this->belongsTo(User::class, 'idUser');
     }
+
+    public function property()
+    {
+        return $this->belongsTo(Properties::class, 'idProperty');
+    }
+
 }
