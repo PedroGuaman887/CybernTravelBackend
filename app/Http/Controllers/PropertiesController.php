@@ -142,7 +142,8 @@ class PropertiesController extends Controller
         JOIN (SELECT * FROM images GROUP BY property_id) as images ON properties.idProperty = images.property_id 
         */
         DB::statement("SET SQL_MODE=''");
-        $currentDate = "2023-05-10";
+        //$currentDate = now()->format('Y-m-d');
+        $currentDate = "2023-05-08";
 
         $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status')
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
@@ -254,7 +255,9 @@ class PropertiesController extends Controller
     public function updateProperties(Request $request, $id)
     {
         $properties = properties::find($id);
-
+        if (!$properties) {
+            return response()->json(['error' => 'Property not found'], 404);
+        }
         $properties->propertyName = $request->propertyName;
         $properties->propertyOperation = $request->propertyOperation;
         $properties->propertyType = $request->propertyType;
@@ -265,6 +268,13 @@ class PropertiesController extends Controller
         $properties->propertyAmount = $request->propertyAmount;
         $properties->propertyAbility = $request->propertyAbility;
         $properties->propertyCity = $request->propertyCity;
+        $properties->propertyCroquis = $request->propertyCroquis;
+        $properties->propertyRooms = $request->propertyRooms;
+        $properties->propertyBathrooms = $request->propertyBathrooms;
+        $properties->propertyBeds = $request->propertyBeds;
+        $properties->propertyRules = $request->propertyRules;
+        $properties->propertySecurity = $request->propertySecurity;
+
 
         $properties->save();
         return $properties;
