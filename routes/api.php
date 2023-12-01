@@ -46,6 +46,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/holidays/{idHolidays}', [HolidaysController::class, 'holidaysById']);
     Route::post('/holidays/updateholidays/{idHolidays}', [HolidaysController::class, 'updateHolidays']);
     Route::delete('/holidays/deleteholidays/{idHolidays}', [HolidaysController::class, 'deleteHolidays']);
+    Route::get('/holidays/properties/{idProperty}', [HolidaysController::class, 'holidaysByIdProperties']);
 
     Route::post('/images', [ImagesController::class, 'createdImages']);
     Route::get('/images/{idImages}', [ImagesController::class, 'imagesById']);
@@ -77,6 +78,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/reservations/{idReservations}', [ReservationsController::class, 'reservationById']);
     Route::get('/reservations', [ReservationsController::class, 'getAllReservations']);
     Route::get('/getAllReservationsOfaProperty/{idProperty}', [ReservationsController::class, 'getAllReservationsOfaProperty']);
+
 });
 
 Route::get('/login', function () {
