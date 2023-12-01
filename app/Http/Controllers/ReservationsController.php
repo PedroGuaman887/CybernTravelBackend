@@ -169,6 +169,7 @@ class ReservationsController extends Controller
     {
         $reservation = DB::table('reservations')
             ->leftJoin('users', 'users.idUser', '=', 'reservations.idUser')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
             ->where('users.idUser', '=', $idUser)
             ->where(function ($query) {
                 $query->whereNull('reservations.idUser')
@@ -182,10 +183,22 @@ class ReservationsController extends Controller
                 'reservations.idProperty',
                 'reservations.idUser',
 
-                'users.fullName',
-                'users.email',
-                'users.phoneNumber',
-                'users.birthDate'
+                'properties.propertyName',
+                'properties.propertyOperation',
+                'properties.propertyType',
+                'properties.propertyAddress',
+                'properties.propertyDescription',
+                'properties.propertyServices',
+                'properties.propertyStatus',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',
+                'properties.propertyCroquis',
+                'properties.propertyRooms',
+                'properties.propertyBathrooms',
+                'properties.propertyBeds',
+                'properties.propertyRules',
+                'properties.propertySecurity'
             )
             ->get();
 
