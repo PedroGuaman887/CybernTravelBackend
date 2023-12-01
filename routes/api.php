@@ -76,6 +76,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('/reservations/{idReservations}', [ReservationsController::class, 'updateReservation']);
     Route::get('/reservations/{idReservations}', [ReservationsController::class, 'reservationById']);
     Route::get('/reservations', [ReservationsController::class, 'getAllReservations']);
+    Route::get('/getAllReservationsOfaProperty/{idProperty}', [ReservationsController::class, 'getAllReservationsOfaProperty']);
 });
 
 Route::get('/login', function () {

@@ -63,15 +63,15 @@ class ReservationsController extends Controller
         $reservations->startDate = $request->startDate;
         $reservations->endDate = $request->endDate;
         $reservations->totalAmount = $request->totalAmount;
-        
+
         $reservations->save();
         return $reservations;
     }
 
     public function reservationById(Request $request)
-    {   
+    {
         $reservation = DB::table('reservations')
-        ->leftJoin('users', 'users.idUser', '=', 'reservations.idUser')
+            ->leftJoin('users', 'users.idUser', '=', 'reservations.idUser')
             ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
             ->where('reservations.idReservations', '=', $request->idReservations)
             ->where(function ($query) {
@@ -80,13 +80,13 @@ class ReservationsController extends Controller
             })
             ->select(
                 'reservations.idReservations',
-                'reservations.startDate', 
+                'reservations.startDate',
                 'reservations.endDate',
-                'reservations.totalAmount', 
+                'reservations.totalAmount',
 
-                'users.idUser', 
-                'users.fullName', 
-                'users.email', 
+                'users.idUser',
+                'users.fullName',
+                'users.email',
                 'users.phoneNumber',
                 'users.birthDate',
 
@@ -105,7 +105,8 @@ class ReservationsController extends Controller
                 'properties.propertyBathrooms',
                 'properties.propertyBeds',
                 'properties.propertyRules',
-                'properties.propertySecurity')
+                'properties.propertySecurity'
+            )
             ->get();
 
         return $reservation;
@@ -153,5 +154,14 @@ class ReservationsController extends Controller
         }
 
         return $requests;
+    }
+    public function getAllReservationsOfaProperty($id)
+    {
+        try {
+            $reservations = Reservations::select('startDate', 'endDate', 'idProperty')->where('idProperty', $id)->get();
+            return response()->json($reservations);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

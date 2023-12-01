@@ -254,30 +254,34 @@ class PropertiesController extends Controller
 
     public function updateProperties(Request $request, $id)
     {
-        $properties = properties::find($id);
-        if (!$properties) {
-            return response()->json(['error' => 'Property not found'], 404);
+        try {
+            $properties = properties::find($id);
+            if (!$properties) {
+                return response()->json(['error' => 'Property not found'], 404);
+            }
+            $properties->propertyName = $request->propertyName;
+            $properties->propertyOperation = $request->propertyOperation;
+            $properties->propertyType = $request->propertyType;
+            $properties->propertyAddress = $request->propertyAddress;
+            $properties->propertyDescription = $request->propertyDescription;
+            $properties->propertyServices = $request->propertyServices;
+            $properties->propertyStatus = $request->propertyStatus;
+            $properties->propertyAmount = $request->propertyAmount;
+            $properties->propertyAbility = $request->propertyAbility;
+            $properties->propertyCity = $request->propertyCity;
+            $properties->propertyCroquis = $request->propertyCroquis;
+            $properties->propertyRooms = $request->propertyRooms;
+            $properties->propertyBathrooms = $request->propertyBathrooms;
+            $properties->propertyBeds = $request->propertyBeds;
+            $properties->propertyRules = $request->propertyRules;
+            $properties->propertySecurity = $request->propertySecurity;
+
+            $properties->save();
+
+            return $properties;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-        $properties->propertyName = $request->propertyName;
-        $properties->propertyOperation = $request->propertyOperation;
-        $properties->propertyType = $request->propertyType;
-        $properties->propertyAddress = $request->propertyAddress;
-        $properties->propertyDescription = $request->propertyDescription;
-        $properties->propertyServices = $request->propertyServices;
-        $properties->propertyStatus = $request->propertyStatus;
-        $properties->propertyAmount = $request->propertyAmount;
-        $properties->propertyAbility = $request->propertyAbility;
-        $properties->propertyCity = $request->propertyCity;
-        $properties->propertyCroquis = $request->propertyCroquis;
-        $properties->propertyRooms = $request->propertyRooms;
-        $properties->propertyBathrooms = $request->propertyBathrooms;
-        $properties->propertyBeds = $request->propertyBeds;
-        $properties->propertyRules = $request->propertyRules;
-        $properties->propertySecurity = $request->propertySecurity;
-
-
-        $properties->save();
-        return $properties;
     }
 
     public function deleteProperties(Request $request)
