@@ -132,24 +132,6 @@ class HolidaysController extends Controller
                 'holidays.endDate',
                 'holidays.amount',
                 'holidays.status',
-                
-
-                'properties.propertyName',
-                'properties.propertyOperation',
-                'properties.propertyType',
-                'properties.propertyAddress',
-                'properties.propertyDescription',
-                'properties.propertyServices',
-                'properties.propertyStatus',
-                'properties.propertyAmount',
-                'properties.propertyAbility',
-                'properties.propertyCity',
-                'properties.propertyCroquis',
-                'properties.propertyRooms',
-                'properties.propertyBathrooms',
-                'properties.propertyBeds',
-                'properties.propertyRules',
-                'properties.propertySecurity'
             )
             ->get();
 
