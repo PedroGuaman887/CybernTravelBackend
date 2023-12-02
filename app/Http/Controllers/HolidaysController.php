@@ -111,4 +111,30 @@ class HolidaysController extends Controller
             return response()->json(['message' => 'there is no holidays'], 404);
         }
     }
+
+
+    public function holidaysByIdProperties($idProperty)
+    {
+        $currentDate = now()->toDateString(); // Obtener la fecha actual
+
+         $reservation = DB::table('holidays')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'holidays.property_id')
+            ->where('properties.idProperty', '=', $idProperty)
+            ->where(function ($query) use ($currentDate) {
+              $query->whereNull('holidays.property_id')
+                  ->orWhereNotNull('holidays.property_id')
+                 ->where('holidays.startDate', '>=', $currentDate);
+                 })
+                ->select(
+
+                'holidays.idHolidays',
+                'holidays.startDate',
+                'holidays.endDate',
+                'holidays.amount',
+                'holidays.status',
+            )
+            ->get();
+
+         return $reservation;
+    }   
 }

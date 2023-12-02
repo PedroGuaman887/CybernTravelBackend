@@ -164,4 +164,86 @@ class ReservationsController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function reservationByIdUser($idUser)
+    {
+        $reservation = DB::table('reservations')
+            ->leftJoin('users', 'users.idUser', '=', 'reservations.idUser')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
+            ->where('users.idUser', '=', $idUser)
+            ->where(function ($query) {
+                $query->whereNull('reservations.idUser')
+                    ->orWhereNotNull('reservations.idUser');
+            })
+            ->select(
+                'reservations.idReservations',
+                'reservations.startDate',
+                'reservations.totalAmount',
+                'reservations.endDate',
+                'reservations.idProperty',
+                'reservations.idUser',
+
+                'properties.propertyName',
+                'properties.propertyOperation',
+                'properties.propertyType',
+                'properties.propertyAddress',
+                'properties.propertyDescription',
+                'properties.propertyServices',
+                'properties.propertyStatus',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',
+                'properties.propertyCroquis',
+                'properties.propertyRooms',
+                'properties.propertyBathrooms',
+                'properties.propertyBeds',
+                'properties.propertyRules',
+                'properties.propertySecurity'
+            )
+            ->get();
+
+        return $reservation;
+    }
+
+    public function reservationByIdProperties($idProperty)
+    {
+        $currentDate = now()->toDateString(); // Obtener la fecha actual
+
+         $reservation = DB::table('reservations')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
+            ->where('properties.idProperty', '=', $idProperty)
+            ->where(function ($query) use ($currentDate) {
+              $query->whereNull('reservations.idProperty')
+                  ->orWhereNotNull('reservations.idProperty')
+                 ->where('reservations.startDate', '>=', $currentDate);
+                 })
+                ->select(
+                'reservations.idReservations',
+                'reservations.startDate',
+                'reservations.totalAmount',
+                'reservations.endDate',
+                'reservations.idProperty',
+                'reservations.idUser',
+
+                'properties.propertyName',
+                'properties.propertyOperation',
+                'properties.propertyType',
+                'properties.propertyAddress',
+                'properties.propertyDescription',
+                'properties.propertyServices',
+                'properties.propertyStatus',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',
+                'properties.propertyCroquis',
+                'properties.propertyRooms',
+                'properties.propertyBathrooms',
+                'properties.propertyBeds',
+                'properties.propertyRules',
+                'properties.propertySecurity'
+            )
+            ->get();
+
+         return $reservation;
+    }   
 }
