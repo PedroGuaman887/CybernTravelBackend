@@ -28,7 +28,7 @@ class FilterController extends Controller
                 ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                     $join->on('properties.idProperty', '=', 'images.property_id');
                 })
-                ->where('propertyStatus', 'disponible')
+                ->where('propertyStatus', 'Publicado')
                 ->where('propertyAbility', $hosts)
                 //->whereBetween('fecha', ['2022-01-01', '2022-01-31'])
                 ->get();
@@ -42,7 +42,7 @@ class FilterController extends Controller
                     $join->on('properties.idProperty', '=', 'images.property_id');
                 })
                 ->where('propertycity', 'LIKE', '%' . $city . '%')
-                ->where('propertyStatus', 'disponible')
+                ->where('propertyStatus', 'Publicado')
                 //->whereBetween('fecha', ['2022-01-01', '2022-01-31'])
                 ->get();
 
