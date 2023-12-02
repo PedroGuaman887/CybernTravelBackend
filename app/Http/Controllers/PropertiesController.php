@@ -145,7 +145,7 @@ class PropertiesController extends Controller
         //$currentDate = now()->format('Y-m-d');
         $currentDate = "2023-05-08";
 
-        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status')
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status', 'propertyCity')
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
