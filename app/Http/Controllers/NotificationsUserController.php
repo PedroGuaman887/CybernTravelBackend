@@ -40,4 +40,20 @@ class NotificationsUserController extends Controller
             'notificationUser' => $newNotification,
         ], 201);
     }
+
+
+    public function userByUser(Request $request)
+    {
+        $user = DB::table('notifications_users')->where('idUser', '=', $request->idUser)
+            ->select(
+                'notifications_users.idNotificationsUsers', 
+                'notifications_users.nameProperty',
+                'notifications_users.nameHost', 
+                'notifications_users.phoneHost', 
+                'notifications_users.idProperty',
+                'notifications_users.idUser')
+            ->get();
+
+        return $user;
+    }
 }

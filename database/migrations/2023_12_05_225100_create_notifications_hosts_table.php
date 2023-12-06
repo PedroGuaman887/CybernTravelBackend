@@ -20,9 +20,9 @@ class CreateNotificationsHostsTable extends Migration
             $table->string('nameProperty');
             $table->string('nameUser');
             $table->unsignedBigInteger('idProperty');
-            $table->unsignedBigInteger('idUser');  
+            $table->unsignedBigInteger('host_id');  
             $table->foreign('idProperty')->references('idProperty')->on('properties');
-            $table->foreign('idUser')->references('idUser')->on('users');
+            $table->foreign('host_id')->references('idUser')->on('users');
             $table->timestamps();
         });
     }

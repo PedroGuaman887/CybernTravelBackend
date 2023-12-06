@@ -14,7 +14,7 @@ class Reservations extends Model
         'totalAmount',
         'startDate',
         'endDate',
-        'idUser',
+        'host_id',
         'idProperty',
     ];
 
@@ -27,4 +27,10 @@ class Reservations extends Model
     {
         return $this->belongsTo(Properties::class, 'idProperty');
     }
+
+    public function rating()
+    {
+        return $this->belongsTo(Ratings::class, 'idRatings');
+    }
+
 }

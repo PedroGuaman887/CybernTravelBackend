@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRatingsTable extends Migration
+class ratings extends Migration
 {
     /**
      * Run the migrations.
@@ -20,11 +20,18 @@ class CreateRatingsTable extends Migration
             $table->integer('ratingFriendliness'); 
             $table->string('ratingComment')->nullable();
             $table->unsignedBigInteger('idProperty'); 
-            $table->unsignedBigInteger('idUser');  
-            $table->foreign('idUser')->references('idUser')->on('users');
+            $table->unsignedBigInteger('idUser'); 
+            
+            $table->unsignedBigInteger('idReservations');
 
+            $table->foreign('idUser')->references('idUser')->on('users');
             $table->foreign('idProperty')->references('idProperty')->on('properties')->onDelete('cascade');
+           
+
+            $table->foreign('idReservations')->references('idReservations')->on('reservations');
+            
             $table->timestamps();
+
         });
     }
 
@@ -38,4 +45,3 @@ class CreateRatingsTable extends Migration
         Schema::dropIfExists('ratings');
     }
 }
-
