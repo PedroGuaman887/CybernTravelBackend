@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
  
 use App\Models\Ratings;
+use App\Models\Reservations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class RatingsController extends Controller
 {
@@ -13,30 +15,44 @@ class RatingsController extends Controller
     public function createdRatings(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'ratingCleaning'=> 'required|integer',    
-            'ratingPunctuality' => 'required|integer' ,
-            'ratingFriendliness'=> 'required|integer',
+            'ratingCleaning' => 'required|integer',
+            'ratingPunctuality' => 'required|integer',
+            'ratingFriendliness' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
-        $rating = new ratings([
-            'ratingCleaning' => $request->ratingCleaning,
-            'ratingPunctuality' => $request->ratingPunctuality,
-            'ratingFriendliness' => $request->ratingFriendliness,
-            'ratingComment' => $request->ratingComment,
-        ]);
-        $rating->idProperty = $request->idProperty;
-        $rating->idUser = $request->idUser;
+        $reservation = Reservations::find($request->idReservations);
 
-        $rating->save();
+        if (!$reservation) {
+            return response()->json(['error' => 'Reservation not found'], 404);
+        }
 
-        return response()->json([
-            'message' => 'User successfully rating',
-            'rating' => $rating,
-        ], 201);
+        $calificationDeadline = Carbon::parse($reservation->endDate)->addDays(7);
+
+        if (now()->lessThanOrEqualTo($calificationDeadline)) {
+            $rating = new ratings([
+                'ratingCleaning' => $request->ratingCleaning,
+                'ratingPunctuality' => $request->ratingPunctuality,
+                'ratingFriendliness' => $request->ratingFriendliness,
+                'ratingComment' => $request->ratingComment,
+            ]);
+
+            $rating->idReservations = $reservation->idReservations;
+            $rating->idProperty = $reservation->idProperty;
+            $rating->idUser = $reservation->idUser;
+
+            $rating->save();
+
+            return response()->json([
+                'message' => 'User successfully rating',
+                'rating' => $rating,
+            ], 201);
+        } else {
+            return response()->json(['error' => 'Rating period has expired'], 400);
+        }
     }
 
     public function ratingsByIdProperty(Request $request)
