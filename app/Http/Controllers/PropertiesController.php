@@ -243,10 +243,22 @@ class PropertiesController extends Controller
             ->select('imageLink', 'imageDescription')
             ->get();
 
+        $holidaysProperty = DB::table('holidays')
+            ->where('property_id', $id)
+            ->select('idHolidays', 'startDate', 'endDate', 'amount')
+            ->get();
+
+        $statusProperty = DB::table('status_properties')
+            ->where('property_id', $id)
+            ->select('startDate', 'endDate', 'status')
+            ->get();
+
         return response()->json([
             'properties' => $properties,
             'Images' => $images,
-            'sevices' => $servicesArray
+            'sevices' => $servicesArray,
+            'holidays' => $holidaysProperty,
+            'status' => $statusProperty
         ]);
         //return $properties;
     }
