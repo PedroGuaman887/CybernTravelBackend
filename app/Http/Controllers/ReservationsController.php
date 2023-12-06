@@ -76,7 +76,7 @@ class ReservationsController extends Controller
         ]);
 
         $notificationHost->idProperty = $request->idProperty;
-        $notificationHost->idUser = $request->idUser;
+        $notificationHost->host_id = $property->host_id;
 
         $notificationHost->save();
 

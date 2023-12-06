@@ -43,45 +43,20 @@ class NotificationsHostController extends Controller
         ], 201);
     }
 
-    public function reservationByIdProperties($idProperty)
+
+    public function userByIdHost(Request $request)
     {
-        $currentDate = now()->toDateString(); // Obtener la fecha actual
-
-         $reservation = DB::table('reservations')
-            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
-            ->where('properties.idProperty', '=', $idProperty)
-            ->where(function ($query) use ($currentDate) {
-              $query->whereNull('reservations.idProperty')
-                  ->orWhereNotNull('reservations.idProperty')
-                 ->where('reservations.startDate', '>=', $currentDate);
-                 })
-                ->select(
-                'reservations.idReservations',
-                'reservations.startDate',
-                'reservations.totalAmount',
-                'reservations.endDate',
-                'reservations.idProperty',
-                'reservations.idUser',
-
-                'properties.propertyName',
-                'properties.propertyOperation',
-                'properties.propertyType',
-                'properties.propertyAddress',
-                'properties.propertyDescription',
-                'properties.propertyServices',
-                'properties.propertyStatus',
-                'properties.propertyAmount',
-                'properties.propertyAbility',
-                'properties.propertyCity',
-                'properties.propertyCroquis',
-                'properties.propertyRooms',
-                'properties.propertyBathrooms',
-                'properties.propertyBeds',
-                'properties.propertyRules',
-                'properties.propertySecurity'
-            )
+        $user = DB::table('notifications_hosts')->where('host_id', '=', $request->idUser)
+            ->select(
+                'notifications_hosts.idNotificationsHosts', 
+                'notifications_hosts.startDate',
+                'notifications_hosts.endDate', 
+                'notifications_hosts.nameProperty', 
+                'notifications_hosts.nameUser',
+                'notifications_hosts.idProperty',
+                'notifications_hosts.host_id')
             ->get();
 
-         return $reservation;
+        return $user;
     }
 }

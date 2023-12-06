@@ -13,6 +13,9 @@ use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\RequestsController;
 use App\Http\Controllers\StatusPropertyController;
 use App\Http\Controllers\ReservationsController;
+use App\Http\Controllers\NotificationsHostController;
+use App\Http\Controllers\NotificationsUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +83,14 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/getAllReservationsOfaProperty/{idProperty}', [ReservationsController::class, 'getAllReservationsOfaProperty']);
     Route::get('/reservations/properties/{idProperty}', [ReservationsController::class, 'reservationByIdProperties']);
     Route::get('/reservations/users/{idUser}', [ReservationsController::class, 'reservationByIdUser']);
+
+
+
+    Route::get('/userByIdHost/{idUser}', [NotificationsHostController::class, 'userByIdHost']);
+
+    Route::get('/userByUser/{idUser}', [NotificationsUserController::class, 'userByUser']);
 });
+
 
 Route::get('/login', function () {
     return view('auth.login');
