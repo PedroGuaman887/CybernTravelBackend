@@ -9,7 +9,7 @@ class NotificationsUsers extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'idNotificationsHosts';
+    protected $primaryKey = 'idNotificationsUsers';
     protected $fillable=[
         'idNotificationsUsers',
         'nameProperty',
