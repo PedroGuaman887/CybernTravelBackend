@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservations;
-use App\Models\Requests;
 use App\Models\Properties;
+use App\Models\NotificationsHosts;
+use App\Models\NotificationsUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -50,9 +51,40 @@ class ReservationsController extends Controller
 
         $newReservation->save();
 
+        $property = Properties::find($request->idProperty);
+
+        $host = User::find($property->host_id);
+
+        $notificationUser = new NotificationsUsers([
+            'nameProperty' => $property->propertyName,
+            'nameHost' => $host->fullName,
+            'phoneHost' => $host->phoneNumber,
+        ]);
+
+        $notificationUser->idProperty = $request->idProperty;
+        $notificationUser->idUser = $request->idUser;
+
+        $notificationUser->save();
+
+        $user = User::find($request->idUser);
+
+        $notificationHost = new NotificationsHosts([
+            'startDate' => $newReservation->startDate,
+            'endDate' => $newReservation->endDate,
+            'nameProperty' => $property->propertyName,
+            'nameUser' => $user->fullName,
+        ]);
+
+        $notificationHost->idProperty = $request->idProperty;
+        $notificationHost->host_id = $property->host_id;
+
+        $notificationHost->save();
+
         return response()->json([
             'message' => 'User successfully reservation',
             'reservation' => $newReservation,
+            'notificationUser' => $notificationUser,
+            'notificationHost' => $notificationHost,
         ], 201);
     }
 

@@ -18,7 +18,12 @@ class Ratings extends Model
         'ratingComment',
         'idUser',
         'idProperty',
+        'idReservations',
     ];
+
+
+    protected $dates = ['startDate', 'endDate', 'created_at', 'updated_at'];
+
 
     public function user()
     {
@@ -30,4 +35,10 @@ class Ratings extends Model
         return $this->belongsTo(Properties::class, 'idProperty');
     }
 
+    public function reservations()
+    {
+    return $this->belongsTo(Reservation::class, 'idReservations');
+    }
+
+    
 }

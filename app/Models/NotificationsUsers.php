@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservations extends Model
+class NotificationsUsers extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idReservations';
+
+    protected $primaryKey = 'idNotificationsUsers';
     protected $fillable=[
-        'idReservations',
-        'totalAmount',
-        'startDate',
-        'endDate',
-        'host_id',
+        'idNotificationsUsers',
+        'nameProperty',
+        'nameHost',
+        'phoneHost',
+        'idUser',
         'idProperty',
     ];
 
@@ -27,10 +28,4 @@ class Reservations extends Model
     {
         return $this->belongsTo(Properties::class, 'idProperty');
     }
-
-    public function rating()
-    {
-        return $this->belongsTo(Ratings::class, 'idRatings');
-    }
-
 }
