@@ -68,12 +68,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/favorites/favoritesByUser/{user_id}', [FavoritesController::class, 'favoritesOfUser']);
     Route::delete('/favorites/{idFavorites}', [FavoritesController::class, 'destroy']);
 
-    Route::post('/requests', [RequestsController::class, 'createdRequests']);
-    Route::post('/requests/{idRequests}', [RequestsController::class, 'updateRequests']);
-    Route::get('/requests/{idRequests}', [RequestsController::class, 'requestsById']);
-    Route::get('/requests', [RequestsController::class, 'getAllRequests']);
-    Route::delete('/delete/requests/{idRequests}', [RequestsController::class, 'deleteRequests']);
-
     Route::post('/StatusPause', [StatusPropertyController::class, 'createStatusPause']);
     Route::delete('/deleteStatusProperties/{idProperty}', [StatusPropertyController::class, 'DeleteStatusProperty']);
     Route::post('/reservations', [ReservationsController::class, 'createdReservation']);
