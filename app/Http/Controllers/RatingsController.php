@@ -24,19 +24,15 @@ class RatingsController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        // Obtener la reserva asociada a la calificación
         $reservation = Reservations::find($request->idReservations);
 
         if (!$reservation) {
             return response()->json(['error' => 'Reservation not found'], 404);
         }
 
-        // Verificar la fecha límite para calificar (endDate + 7 días)
         $calificationDeadline = Carbon::parse($reservation->endDate)->addDays(7);
 
-        // Verificar si la fecha límite es mayor o igual a la fecha actual
         if (now()->lessThanOrEqualTo($calificationDeadline)) {
-            // Crear la calificación
             $rating = new ratings([
                 'ratingCleaning' => $request->ratingCleaning,
                 'ratingPunctuality' => $request->ratingPunctuality,
