@@ -57,17 +57,6 @@ class FilterController extends Controller
                 })->orWhereNull('properties.idProperty');
             });
         }
-        /*         if ($startDate !== null && $endDate !== null) {
-            $query->where(function ($subquery) use ($startDate, $endDate) {
-                $subquery->whereNotIn('properties.idProperty', function ($reservationQuery) use ($startDate, $endDate) {
-                    $reservationQuery->select('idProperty')
-                        ->from('reservations')
-                        ->where('startDate', '<=', $endDate)
-                        ->where('endDate', '>=', $startDate);
-                });
-            });
-        }
- */
         $properties = $query->get();
 
         return response()->json($properties);
