@@ -50,11 +50,9 @@ class FilterController extends Controller
                 $subquery->whereNotIn('properties.idProperty', function ($reservationQuery) use ($startDate, $endDate) {
                     $reservationQuery->select('idProperty')
                         ->from('reservations')
-                        ->where(function ($dateQuery) use ($startDate, $endDate) {
-                            $dateQuery->whereBetween('startDate', [$startDate, $endDate])
-                                ->orWhereBetween('endDate', [$startDate, $endDate]);
-                        });
-                })->orWhereNull('properties.idProperty');
+                        ->where('startDate', '<=', $endDate)
+                        ->where('endDate', '>=', $startDate);
+                });
             });
         }
         $properties = $query->get();

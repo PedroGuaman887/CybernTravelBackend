@@ -25,7 +25,7 @@ class RatingsController extends Controller
         }
 
         $reservation = Reservations::find($request->idReservations);
-
+ 
         if (!$reservation) {
             return response()->json(['error' => 'Reservation not found'], 404);
         }
