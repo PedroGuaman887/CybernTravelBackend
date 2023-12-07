@@ -200,6 +200,7 @@ class ReservationsController extends Controller
     public function reservationByIdUser($idUser)
     {
         DB::statement("SET SQL_MODE=''");
+        $currentDate = now()->toDateString();
 
         $reservations = DB::table('reservations')
             ->leftJoin('users', 'users.idUser', '=', 'reservations.idUser')
@@ -214,6 +215,10 @@ class ReservationsController extends Controller
             ->where(function ($query) {
                 $query->whereNull('reservations.idUser')
                     ->orWhereNotNull('reservations.idUser');
+            })
+            ->where(function ($query) use ($currentDate) {
+                $query->where('reservations.endDate', '>=', $currentDate)
+                    ->orWhereNull('reservations.idUser');
             })
             ->select(
                 'reservations.startDate',
