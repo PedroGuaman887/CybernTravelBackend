@@ -277,5 +277,48 @@ class ReservationsController extends Controller
             ->get();
 
          return $reservation;
-    }   
+    }  
+    
+    
+    public function reservationByIdUserMissing($idUser)
+    {
+        $currentDate = now()->toDateString();
+
+        $reservation = DB::table('reservations')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
+            ->where('reservations.idUser', '=', $idUser)
+            ->where(function ($query) use ($currentDate) {
+                $query->where('reservations.endDate', '>=', $currentDate)
+                    ->orWhereNull('reservations.idUser');
+                })
+                ->select(
+                'reservations.idReservations',
+                'reservations.startDate',
+                'reservations.totalAmount',
+                'reservations.endDate',
+                'reservations.idProperty',
+                'reservations.idUser',
+
+                'properties.propertyName',
+                'properties.propertyOperation',
+                'properties.propertyType',
+                'properties.propertyAddress',
+                'properties.propertyDescription',
+                'properties.propertyServices',
+                'properties.propertyStatus',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',
+                'properties.propertyCroquis',
+                'properties.propertyRooms',
+                'properties.propertyBathrooms',
+                'properties.propertyBeds',
+                'properties.propertyRules',
+                'properties.propertySecurity'
+             )
+            ->get();
+
+        return $reservation;
+    }
+
 }
