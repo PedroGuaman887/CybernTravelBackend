@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\NotificationsHosts;
 use App\Models\Properties;
 use App\Models\User;
@@ -33,7 +34,7 @@ class NotificationsHostController extends Controller
         ]);
 
         $newNotification->idProperty = $request->idProperty;
-        $newNotification->idUser = $request->idUser;
+        $newNotification->host_id = $request->idUser;
 
         $newNotification->save();
 
@@ -48,13 +49,14 @@ class NotificationsHostController extends Controller
     {
         $user = DB::table('notifications_hosts')->where('host_id', '=', $request->idUser)
             ->select(
-                'notifications_hosts.idNotificationsHosts', 
+                'notifications_hosts.idNotificationsHosts',
                 'notifications_hosts.startDate',
-                'notifications_hosts.endDate', 
-                'notifications_hosts.nameProperty', 
+                'notifications_hosts.endDate',
+                'notifications_hosts.nameProperty',
                 'notifications_hosts.nameUser',
                 'notifications_hosts.idProperty',
-                'notifications_hosts.host_id')
+                'notifications_hosts.host_id'
+            )
             ->get();
 
         return $user;

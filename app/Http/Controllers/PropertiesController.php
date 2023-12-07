@@ -133,7 +133,7 @@ class PropertiesController extends Controller
         }
     }
 
-    public function getAllProperties()
+    public function getAllProperties(Request $request)
     {
         /* 
         obtener datos del alojamiento y la primera imagen registrada del alojamiento
@@ -142,10 +142,10 @@ class PropertiesController extends Controller
         JOIN (SELECT * FROM images GROUP BY property_id) as images ON properties.idProperty = images.property_id 
         */
         DB::statement("SET SQL_MODE=''");
-        //$currentDate = now()->format('Y-m-d');
-        $currentDate = "2023-05-08";
+        //$currentDate = "2021-05-08";
+        $currentDate = $request->input('currentDate');
 
-        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status')
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status', 'propertyCity')
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
@@ -243,10 +243,22 @@ class PropertiesController extends Controller
             ->select('imageLink', 'imageDescription')
             ->get();
 
+        $holidaysProperty = DB::table('holidays')
+            ->where('property_id', $id)
+            ->select('idHolidays', 'startDate', 'endDate', 'amount')
+            ->get();
+
+        $statusProperty = DB::table('status_properties')
+            ->where('property_id', $id)
+            ->select('startDate', 'endDate', 'status')
+            ->get();
+
         return response()->json([
             'properties' => $properties,
             'Images' => $images,
-            'sevices' => $servicesArray
+            'sevices' => $servicesArray,
+            'holidays' => $holidaysProperty,
+            'status' => $statusProperty
         ]);
         //return $properties;
     }

@@ -27,7 +27,7 @@ class NotificationsUserController extends Controller
         $newNotification = new NotificationsUsers([
             'phoneHost' => $request->phoneHost,
             'nameProperty' => $request->nameProperty,
-            'nameUser' => $request->nameUser,
+            'nameHost' => $request->nameHost,
         ]);
 
         $newNotification->idProperty = $request->idProperty;
@@ -46,12 +46,13 @@ class NotificationsUserController extends Controller
     {
         $user = DB::table('notifications_users')->where('idUser', '=', $request->idUser)
             ->select(
-                'notifications_users.idNotificationsUsers', 
+                'notifications_users.idNotificationsUsers',
                 'notifications_users.nameProperty',
-                'notifications_users.nameHost', 
-                'notifications_users.phoneHost', 
+                'notifications_users.nameHost',
+                'notifications_users.phoneHost',
                 'notifications_users.idProperty',
-                'notifications_users.idUser')
+                'notifications_users.idUser'
+            )
             ->get();
 
         return $user;
