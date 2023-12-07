@@ -199,13 +199,56 @@ class ReservationsController extends Controller
 
     public function reservationByIdUser($idUser)
     {
-        $reservation = DB::table('reservations')
+        DB::statement("SET SQL_MODE=''");
+        $currentDate = now()->toDateString();
+
+        $reservations = DB::table('reservations')
             ->leftJoin('users', 'users.idUser', '=', 'reservations.idUser')
             ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
+            ->leftJoin(DB::raw('(SELECT property_id, MIN(idImages) as minImage FROM images GROUP BY property_id) as first_images'), function ($join) {
+                $join->on('properties.idProperty', '=', 'first_images.property_id');
+            })
+            ->leftJoin('images', function ($join) {
+                $join->on('images.idImages', '=', 'first_images.minImage');
+            })
             ->where('users.idUser', '=', $idUser)
             ->where(function ($query) {
                 $query->whereNull('reservations.idUser')
                     ->orWhereNotNull('reservations.idUser');
+            })
+            ->where(function ($query) use ($currentDate) {
+                $query->where('reservations.endDate', '>=', $currentDate)
+                    ->orWhereNull('reservations.idUser');
+            })
+            ->select(
+                'reservations.startDate',
+                'reservations.totalAmount',
+                'reservations.endDate',
+                'reservations.idProperty',
+                'reservations.idUser',
+                'properties.propertyName',
+                'properties.propertyDescription',
+                'properties.propertyAmount',
+                'properties.propertyAbility',
+                'properties.propertyCity',
+                'images.imageLink'
+            )
+            ->get();
+
+        return response()->json($reservations);
+    }
+
+    public function reservationByIdProperties($idProperty)
+    {
+        $currentDate = now()->toDateString(); // Obtener la fecha actual
+
+        $reservation = DB::table('reservations')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
+            ->where('properties.idProperty', '=', $idProperty)
+            ->where(function ($query) use ($currentDate) {
+                $query->whereNull('reservations.idProperty')
+                    ->orWhereNotNull('reservations.idProperty')
+                    ->where('reservations.startDate', '>=', $currentDate);
             })
             ->select(
                 'reservations.idReservations',
@@ -237,19 +280,18 @@ class ReservationsController extends Controller
         return $reservation;
     }
 
-    public function reservationByIdProperties($idProperty)
+    public function reservationByIdUserMissing($idUser)
     {
-        $currentDate = now()->toDateString(); // Obtener la fecha actual
+        $currentDate = now()->toDateString();
 
-         $reservation = DB::table('reservations')
+        $reservation = DB::table('reservations')
             ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
-            ->where('properties.idProperty', '=', $idProperty)
+            ->where('reservations.idUser', '=', $idUser)
             ->where(function ($query) use ($currentDate) {
-              $query->whereNull('reservations.idProperty')
-                  ->orWhereNotNull('reservations.idProperty')
-                 ->where('reservations.startDate', '>=', $currentDate);
-                 })
-                ->select(
+                $query->where('reservations.endDate', '>=', $currentDate)
+                    ->orWhereNull('reservations.idUser');
+            })
+            ->select(
                 'reservations.idReservations',
                 'reservations.startDate',
                 'reservations.totalAmount',
@@ -276,49 +318,6 @@ class ReservationsController extends Controller
             )
             ->get();
 
-         return $reservation;
-    }  
-    
-    
-    public function reservationByIdUserMissing($idUser)
-    {
-        $currentDate = now()->toDateString();
-
-        $reservation = DB::table('reservations')
-            ->leftJoin('properties', 'properties.idProperty', '=', 'reservations.idProperty')
-            ->where('reservations.idUser', '=', $idUser)
-            ->where(function ($query) use ($currentDate) {
-                $query->where('reservations.endDate', '>=', $currentDate)
-                    ->orWhereNull('reservations.idUser');
-                })
-                ->select(
-                'reservations.idReservations',
-                'reservations.startDate',
-                'reservations.totalAmount',
-                'reservations.endDate',
-                'reservations.idProperty',
-                'reservations.idUser',
-
-                'properties.propertyName',
-                'properties.propertyOperation',
-                'properties.propertyType',
-                'properties.propertyAddress',
-                'properties.propertyDescription',
-                'properties.propertyServices',
-                'properties.propertyStatus',
-                'properties.propertyAmount',
-                'properties.propertyAbility',
-                'properties.propertyCity',
-                'properties.propertyCroquis',
-                'properties.propertyRooms',
-                'properties.propertyBathrooms',
-                'properties.propertyBeds',
-                'properties.propertyRules',
-                'properties.propertySecurity'
-             )
-            ->get();
-
         return $reservation;
     }
-
 }
