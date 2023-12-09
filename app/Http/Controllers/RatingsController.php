@@ -53,7 +53,7 @@ class RatingsController extends Controller
 
             $rating->save();
 
-            $property = Properties::find($request->idProperty);
+            $property = Properties::find($rating->idProperty);
 
             $host = User::find($property->host_id);
 
@@ -82,7 +82,9 @@ class RatingsController extends Controller
             return response()->json([
                 'message' => 'User successfully rating',
                 'rating' => $rating,
-                'host' => $host,
+                'idreservation' => $reservation->idReservations,
+                'idProperty' => $reservation->idProperty,
+                'host_id' => $host->idUser,
                 'qualification host' => $qualification
             ], 201);
         } else {

@@ -296,9 +296,9 @@ class PropertiesController extends Controller
         }
     }
 
-    public function deleteProperties(Request $request)
+    public function deleteProperties($idProperty)
     {
-        $deleted = properties::destroy($request->idProperty);
+        $deleted = properties::destroy($idProperty);
 
         if ($deleted) {
             return response()->json(['message' => 'property removed']);

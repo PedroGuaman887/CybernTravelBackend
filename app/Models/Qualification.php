@@ -22,4 +22,13 @@ class Qualification extends Model
     {
         return $this->belongsTo(User::class, 'idUser');
     }
+    public function property()
+    {
+        return $this->belongsTo(Properties::class, 'idProperty');
+    }
+
+    public function rating()
+    {
+        return $this->belongsTo(Ratings::class, 'idRatings');
+    }
 }

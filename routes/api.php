@@ -15,7 +15,7 @@ use App\Http\Controllers\StatusPropertyController;
 use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\NotificationsHostController;
 use App\Http\Controllers\NotificationsUserController;
-
+use App\Http\Controllers\QualificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/getAllReservationsOfaProperty/{idProperty}', [ReservationsController::class, 'getAllReservationsOfaProperty']);
     Route::get('/reservations/properties/{idProperty}', [ReservationsController::class, 'reservationByIdProperties']);
     Route::get('/reservations/users/{idUser}', [ReservationsController::class, 'reservationByIdUser']);
-    
+
     Route::get('/reservations/reservationByIdUserMissing/{idUser}', [ReservationsController::class, 'reservationByIdUserMissing']);
 
 
@@ -86,6 +86,8 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::post('/createNotificationUser', [NotificationsUserController::class, 'createdNotification']);
     Route::get('/userByUser/{idUser}', [NotificationsUserController::class, 'userByUser']);
+
+    Route::get('/getQualificationsAndComments/{idProperty}', [QualificationController::class, 'getQualificationsAndComments']);
 });
 
 

@@ -190,7 +190,7 @@ class ReservationsController extends Controller
     public function getAllReservationsOfaProperty($id)
     {
         try {
-            $reservations = Reservations::select('startDate', 'endDate', 'idProperty')->where('idProperty', $id)->get();
+            $reservations = Reservations::select('startDate', 'endDate', 'idProperty', 'idUser')->where('idProperty', $id)->get();
             return response()->json($reservations);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

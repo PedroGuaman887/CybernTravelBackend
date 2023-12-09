@@ -2,84 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Properties;
 use App\Models\Qualification;
+use App\Models\Ratings;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
 class QualificationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getQualificationsAndComments($idProperty)
     {
-        //
-    }
+        $property = Properties::find($idProperty);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $host = User::where('idUser', $property->host_id)->first();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Qualification  $qualification
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Qualification $qualification)
-    {
-        //
-    }
+        $qualification = Qualification::where('idUser', $host->idUser)->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Qualification  $qualification
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Qualification $qualification)
-    {
-        //
-    }
+        $comments = Ratings::select('ratingComment', 'idProperty', 'idUser', 'created_at')
+            ->whereNotNull('ratingComment')
+            ->get();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Qualification  $qualification
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Qualification $qualification)
-    {
-        //
-    }
+        foreach ($comments as $comment) {
+            $user = User::where('idUser', $comment->idUser)->first();
+            $comment->userName = $user->fullName;
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Qualification  $qualification
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Qualification $qualification)
-    {
-        //
+        return response()->json([
+            'host' => $host,
+            'qualification' => $qualification,
+            'comments' => $comments
+        ], 201);
     }
 }
