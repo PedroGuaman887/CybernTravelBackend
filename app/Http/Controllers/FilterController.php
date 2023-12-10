@@ -21,7 +21,8 @@ class FilterController extends Controller
         $hosts = $request->input('hosts');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
-        $currentDate = $request->input('currentDate');
+        $currentDate = "2023-12-10";
+        //$currentDate = $request->input('currentDate');
 
         $query = Properties::select(
             'idProperty',
@@ -60,20 +61,30 @@ class FilterController extends Controller
                 });
             });
         }
-        $properties = $query->get();
+        $properties = $query->get()->toArray();
 
 
         if ($startDate !== null && $endDate !== null) {
-            $properties = $properties->reject(function ($property) use ($startDate, $endDate) {
-                return $property->status === 'Pausado' && ($property->startDate >= $endDate || $property->endDate <= $startDate);
+            $filteredProperties = array_filter($properties, function ($property) use ($startDate, $endDate) {
+                if ($property['startDate'] !== null && $property['endDate'] !== null) {
+                    $insideRange = ($property['startDate'] >= $startDate && $property['startDate'] <= $endDate) ||
+                        ($property['endDate'] >= $startDate && $property['endDate'] <= $endDate);
+                    return !$insideRange;
+                }
+                return true;
             });
+            $filteredProperties = collect(array_values($filteredProperties));
         } else {
-            $properties = $properties->reject(function ($property) use ($currentDate) {
-                return $property->status === 'Pausado' && ($property->startDate >= $currentDate || $property->endDate <= $currentDate);
+            $filteredProperties = array_filter($properties, function ($property) use ($currentDate) {
+                if ($property['startDate'] !== null && $property['endDate'] !== null) {
+                    return !($property['startDate'] <= $currentDate && $property['endDate'] >= $currentDate);
+                }
+                return true;
             });
+            $filteredProperties = collect(array_values($filteredProperties));
         }
-        $properties = $properties->values();
 
-        return response()->json($properties);
+
+        return response()->json($filteredProperties);
     }
 }
