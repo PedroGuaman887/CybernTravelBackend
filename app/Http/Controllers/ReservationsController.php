@@ -196,6 +196,18 @@ class ReservationsController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function getReservationDates($idUser, $idProperty)
+    {
+        try {
+            $reservations = Reservations::select('startDate', 'endDate', 'idProperty', 'idUser')
+                ->where('idProperty', $idProperty)
+                ->where('idUSer', $idUser)
+                ->get();
+            return response()->json($reservations);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     public function reservationByIdUser($idUser)
     {

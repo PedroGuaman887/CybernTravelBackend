@@ -79,6 +79,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/reservations/users/{idUser}', [ReservationsController::class, 'reservationByIdUser']);
 
     Route::get('/reservations/reservationByIdUserMissing/{idUser}', [ReservationsController::class, 'reservationByIdUserMissing']);
+    Route::get('/reservations/getReservationDates/{idUser}/{idProperty}', [ReservationsController::class, 'getReservationDates']);
 
 
     Route::post('/createNotificationHost', [NotificationsHostController::class, 'createdNotification']);

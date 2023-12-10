@@ -20,6 +20,7 @@ class QualificationController extends Controller
         $qualification = Qualification::where('idUser', $host->idUser)->first();
 
         $comments = Ratings::select('ratingComment', 'idProperty', 'idUser', 'created_at')
+            ->where('idProperty', $idProperty)
             ->whereNotNull('ratingComment')
             ->get();
 
