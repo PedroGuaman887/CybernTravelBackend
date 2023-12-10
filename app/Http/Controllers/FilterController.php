@@ -21,7 +21,7 @@ class FilterController extends Controller
         $hosts = $request->input('hosts');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
-
+        $currentDate = $request->input('currentDate');
 
         $query = Properties::select(
             'idProperty',
@@ -32,10 +32,15 @@ class FilterController extends Controller
             'images.property_id',
             'propertyDescription',
             'propertyCity',
-            'propertyStatus'
+            'propertyStatus',
+            'status_properties.status',
+            'status_properties.startDate',
+            'status_properties.endDate',
         )->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
             $join->on('properties.idProperty', '=', 'images.property_id');
-        })->where('propertyStatus', 'Publicado');
+        })
+            ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty')
+            ->where('propertyStatus', 'Publicado');
 
         if ($city !== null) {
             $query->where('propertyCity', 'LIKE', '%' . $city . '%');
@@ -56,6 +61,18 @@ class FilterController extends Controller
             });
         }
         $properties = $query->get();
+
+
+        if ($startDate !== null && $endDate !== null) {
+            $properties = $properties->reject(function ($property) use ($startDate, $endDate) {
+                return $property->status === 'Pausado' && ($property->startDate >= $endDate || $property->endDate <= $startDate);
+            });
+        } else {
+            $properties = $properties->reject(function ($property) use ($currentDate) {
+                return $property->status === 'Pausado' && ($property->startDate >= $currentDate || $property->endDate <= $currentDate);
+            });
+        }
+        $properties = $properties->values();
 
         return response()->json($properties);
     }

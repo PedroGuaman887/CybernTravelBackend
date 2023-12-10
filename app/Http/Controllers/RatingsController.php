@@ -32,7 +32,7 @@ class RatingsController extends Controller
         if (!$reservation) {
             return response()->json(['error' => 'Reservation not found'], 404);
         }
-        /*         $existingRating = Ratings::where('idUser', $request->idUser)->count();
+        /*$existingRating = Ratings::where('idUser', $request->idUser)->count();
 
         if ($existingRating > 0) {
             return response()->json(['error' => 'You have already rated this reservation'], 400);
