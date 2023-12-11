@@ -89,6 +89,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/userByUser/{idUser}', [NotificationsUserController::class, 'userByUser']);
 
     Route::get('/getQualificationsAndComments/{idProperty}', [QualificationController::class, 'getQualificationsAndComments']);
+    Route::get('/perfilHost/{idUser}', [QualificationController::class, 'getPerfilHost']);
+    Route::get('/perfilUser/{idUser}', [QualificationController::class, 'getPerfilUser']);
 });
 
 

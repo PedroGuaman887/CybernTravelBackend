@@ -145,10 +145,11 @@ class PropertiesController extends Controller
         //$currentDate = "2021-05-08";
         $currentDate = $request->input('currentDate');
 
-        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status', 'propertyCity')
+        $properties = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'propertyStatus', 'status_properties.status', 'propertyCity')
             ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
+
             ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty')
             ->where(function ($query) use ($currentDate) {
                 $query->whereNull('status_properties.startDate')
@@ -162,7 +163,13 @@ class PropertiesController extends Controller
                 $query->where('status_properties.status', '!=', 'Pausado')
                     ->orWhereNull('status_properties.status');
             })
-            ->get();
+            ->get()->toArray();
+        $properties = array_filter($properties, function ($property) {
+            return $property['propertyStatus'] === 'Publicado';
+        });
+
+        // Convertir el resultado a un array indexado
+        $properties = array_values($properties);
 
         return response()->json($properties);
     }
@@ -240,7 +247,7 @@ class PropertiesController extends Controller
 
         $images = DB::table('images')
             ->where('property_id', $id)
-            ->select('imageLink', 'imageDescription')
+            ->select('idImages', 'imageLink', 'imageDescription')
             ->get();
 
         $holidaysProperty = DB::table('holidays')
