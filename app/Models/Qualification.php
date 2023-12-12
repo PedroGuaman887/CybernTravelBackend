@@ -5,38 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ratings extends Model
+class Qualification extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idRatings';
+    protected $primaryKey = 'idQualification';
 
     protected $fillable = [
-        'idRatings',
+        'idQualification',
         'ratingCleaning',
         'ratingPunctuality',
-        'ratingFriendliness',
-        'ratingComment',
+        'ratingComunication',
+        'qualificationAmount',
         'idUser',
-        'idProperty',
-        'idReservations',
     ];
-
-
-    protected $dates = ['startDate', 'endDate', 'created_at', 'updated_at'];
-
-
     public function user()
     {
         return $this->belongsTo(User::class, 'idUser');
     }
-
     public function property()
     {
         return $this->belongsTo(Properties::class, 'idProperty');
     }
 
-    public function reservations()
+    public function rating()
     {
-        return $this->belongsTo(Reservations::class, 'idReservations');
+        return $this->belongsTo(Ratings::class, 'idRatings');
     }
 }

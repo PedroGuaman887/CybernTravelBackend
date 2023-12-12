@@ -21,7 +21,8 @@ class FilterController extends Controller
         $hosts = $request->input('hosts');
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
-
+        $currentDate = "2023-12-10";
+        //$currentDate = $request->input('currentDate');
 
         $query = Properties::select(
             'idProperty',
@@ -32,10 +33,15 @@ class FilterController extends Controller
             'images.property_id',
             'propertyDescription',
             'propertyCity',
-            'propertyStatus'
+            'propertyStatus',
+            'status_properties.status',
+            'status_properties.startDate',
+            'status_properties.endDate',
         )->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
             $join->on('properties.idProperty', '=', 'images.property_id');
-        })->where('propertyStatus', 'Publicado');
+        })
+            ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty')
+            ->where('propertyStatus', 'Publicado');
 
         if ($city !== null) {
             $query->where('propertyCity', 'LIKE', '%' . $city . '%');
@@ -55,8 +61,30 @@ class FilterController extends Controller
                 });
             });
         }
-        $properties = $query->get();
+        $properties = $query->get()->toArray();
 
-        return response()->json($properties);
+
+        if ($startDate !== null && $endDate !== null) {
+            $filteredProperties = array_filter($properties, function ($property) use ($startDate, $endDate) {
+                if ($property['startDate'] !== null && $property['endDate'] !== null) {
+                    $insideRange = ($property['startDate'] >= $startDate && $property['startDate'] <= $endDate) ||
+                        ($property['endDate'] >= $startDate && $property['endDate'] <= $endDate);
+                    return !$insideRange;
+                }
+                return true;
+            });
+            $filteredProperties = collect(array_values($filteredProperties));
+        } else {
+            $filteredProperties = array_filter($properties, function ($property) use ($currentDate) {
+                if ($property['startDate'] !== null && $property['endDate'] !== null) {
+                    return !($property['startDate'] <= $currentDate && $property['endDate'] >= $currentDate);
+                }
+                return true;
+            });
+            $filteredProperties = collect(array_values($filteredProperties));
+        }
+
+
+        return response()->json($filteredProperties);
     }
 }

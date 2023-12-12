@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
- 
+
+use App\Models\Qualification;
 use App\Models\Ratings;
 use App\Models\Reservations;
+use App\Models\User;
+use App\Models\Properties;
+use App\Models\Users_comments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -25,11 +29,15 @@ class RatingsController extends Controller
         }
 
         $reservation = Reservations::find($request->idReservations);
- 
+
         if (!$reservation) {
             return response()->json(['error' => 'Reservation not found'], 404);
         }
+        /*$existingRating = Ratings::where('idUser', $request->idUser)->count();
 
+        if ($existingRating > 0) {
+            return response()->json(['error' => 'You have already rated this reservation'], 400);
+        } */
         $calificationDeadline = Carbon::parse($reservation->endDate)->addDays(7);
 
         if (now()->lessThanOrEqualTo($calificationDeadline)) {
@@ -42,13 +50,52 @@ class RatingsController extends Controller
 
             $rating->idReservations = $reservation->idReservations;
             $rating->idProperty = $reservation->idProperty;
-            $rating->idUser = $reservation->idUser;
+            $rating->idUser = $request->idUser;
 
             $rating->save();
+
+            $property = Properties::find($rating->idProperty);
+
+            $host = User::find($property->host_id);
+
+            $existingQualification = Qualification::where('idUser', $host->idUser)->first();
+
+            if ($existingQualification) {
+                $existingQualification->ratingCleaning += $request->ratingCleaning;
+                $existingQualification->ratingPunctuality += $request->ratingPunctuality;
+                $existingQualification->ratingComunication += $request->ratingFriendliness;
+                $existingQualification->qualificationAmount += 1;
+                $existingQualification->save();
+                $qualification = $existingQualification;
+            } else {
+                $qualification = new Qualification([
+                    'ratingCleaning' => $request->ratingCleaning,
+                    'ratingPunctuality' => $request->ratingPunctuality,
+                    'ratingComunication' => $request->ratingFriendliness,
+                    'qualificationAmount' => 1,
+                ]);
+
+                $qualification->idUser = $host->idUser;
+                $qualification->save();
+            }
+            $currentDate = Carbon::now()->format('y-m-d');
+            $comment = new Users_comments([
+                'comment' => $request->commentToHost,
+                'commentDate' => $currentDate
+            ]);
+            $comment->sender_user_id = $request->idUser;
+            $comment->receiver_user_id = $host->idUser;
+            $comment->save();
+
 
             return response()->json([
                 'message' => 'User successfully rating',
                 'rating' => $rating,
+                'idreservation' => $reservation->idReservations,
+                'idProperty' => $reservation->idProperty,
+                'host_id' => $host->idUser,
+                'qualification host' => $qualification,
+                'comment' => $comment
             ], 201);
         } else {
             return response()->json(['error' => 'Rating period has expired'], 400);
