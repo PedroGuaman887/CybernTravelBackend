@@ -7,6 +7,7 @@ use App\Models\Ratings;
 use App\Models\Reservations;
 use App\Models\User;
 use App\Models\Properties;
+use App\Models\Users_comments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +78,14 @@ class RatingsController extends Controller
                 $qualification->idUser = $host->idUser;
                 $qualification->save();
             }
+            $currentDate = Carbon::now()->format('y-m-d');
+            $comment = new Users_comments([
+                'comment' => $request->commentToHost,
+                'commentDate' => $currentDate
+            ]);
+            $comment->sender_user_id = $request->idUser;
+            $comment->receiver_user_id = $host->idUser;
+            $comment->save();
 
 
             return response()->json([
@@ -85,7 +94,8 @@ class RatingsController extends Controller
                 'idreservation' => $reservation->idReservations,
                 'idProperty' => $reservation->idProperty,
                 'host_id' => $host->idUser,
-                'qualification host' => $qualification
+                'qualification host' => $qualification,
+                'comment' => $comment
             ], 201);
         } else {
             return response()->json(['error' => 'Rating period has expired'], 400);

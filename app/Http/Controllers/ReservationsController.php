@@ -67,12 +67,15 @@ class ReservationsController extends Controller
         $notificationUser->save();
 
         $user = User::find($request->idUser);
+        $fullName = $user->fullName;
+        $idUser = $user->idUser;
+        $result = $fullName . ', ' . $idUser;
 
         $notificationHost = new NotificationsHosts([
             'startDate' => $newReservation->startDate,
             'endDate' => $newReservation->endDate,
             'nameProperty' => $property->propertyName,
-            'nameUser' => $user->fullName,
+            'nameUser' => $result,
         ]);
 
         $notificationHost->idProperty = $request->idProperty;

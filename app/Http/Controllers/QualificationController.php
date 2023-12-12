@@ -48,18 +48,4 @@ class QualificationController extends Controller
             'qualification' => $qualification,
         ], 201);
     }
-
-    public function getPerfilUSer($idUser)
-    {
-
-        $host = User::where('idUser', $idUser)->first();
-
-        $qualification = Qualification::where('idUser', $host->idUser)->first();
-
-
-        return response()->json([
-            'host' => $host,
-            'qualification' => $qualification,
-        ], 201);
-    }
 }

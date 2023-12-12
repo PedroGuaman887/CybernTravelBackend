@@ -58,7 +58,12 @@ class NotificationsHostController extends Controller
                 'notifications_hosts.host_id'
             )
             ->get();
+        foreach ($user as $notification) {
+            $nameUserParts = explode(', ', $notification->nameUser);
 
+            $notification->nameUser = $nameUserParts[0];
+            $notification->idUser = intval($nameUserParts[1]);
+        }
         return $user;
     }
 }

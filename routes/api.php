@@ -16,6 +16,7 @@ use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\NotificationsHostController;
 use App\Http\Controllers\NotificationsUserController;
 use App\Http\Controllers\QualificationController;
+use App\Http\Controllers\QualificationsUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,7 +91,9 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::get('/getQualificationsAndComments/{idProperty}', [QualificationController::class, 'getQualificationsAndComments']);
     Route::get('/perfilHost/{idUser}', [QualificationController::class, 'getPerfilHost']);
-    Route::get('/perfilUser/{idUser}', [QualificationController::class, 'getPerfilUser']);
+
+    Route::post('/rateToUser', [QualificationsUserController::class, 'rateToUser']);
+    Route::get('/perfilUser/{idUser}', [QualificationsUserController::class, 'getPerfilUser']);
 });
 
 

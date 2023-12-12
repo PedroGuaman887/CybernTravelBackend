@@ -12,8 +12,8 @@ class Ratings extends Model
 
     protected $fillable = [
         'idRatings',
-        'ratingCleaning',    
-        'ratingPunctuality' ,
+        'ratingCleaning',
+        'ratingPunctuality',
         'ratingFriendliness',
         'ratingComment',
         'idUser',
@@ -37,8 +37,6 @@ class Ratings extends Model
 
     public function reservations()
     {
-    return $this->belongsTo(Reservation::class, 'idReservations');
+        return $this->belongsTo(Reservations::class, 'idReservations');
     }
-
-    
 }
