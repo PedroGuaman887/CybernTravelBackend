@@ -48,4 +48,16 @@ class QualificationController extends Controller
             'qualification' => $qualification,
         ], 201);
     }
+
+    public function updateUserPicture(Request $request)
+    {
+        $user = User::find($request->idUser);
+
+        if (!$user) {
+            return response()->json(['error' => 'Property not found'], 404);
+        }
+        $user->user_picture = $request->user_picture;
+        $user->save();
+        return response()->json('user photo successfully updated');
+    }
 }
