@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Properties;
 use App\Models\Qualification;
 use App\Models\Qualifications_user;
 use App\Models\User;
@@ -9,6 +10,8 @@ use App\Models\Users_comments;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class QualificationsUserController extends Controller
 {
@@ -66,22 +69,60 @@ class QualificationsUserController extends Controller
     }
     public function getPerfilUSer($idUser)
     {
+        DB::statement("SET SQL_MODE=''");
 
         $host = User::where('idUser', $idUser)->first();
 
-        $qualification = Qualification::where('idUser', $host->idUser)->first();
+        $qualification = Qualification::select('idQualification', 'ratingCleaning', 'ratingPunctuality', 'ratingComunication', 'qualificationAmount', 'idUser')
+            ->where('idUser', $host->idUser)->first();
 
-        $comments = Users_comments::where('receiver_user_id', $idUser)->get();
+        $qualification_user = Qualifications_user::select('idQualificationUser', 'ratingCleaning', 'ratingPunctuality', 'ratingComunication', 'qualificationAmount', 'idUser')
+            ->where('idUser', $host->idUser)->first();
 
-        foreach ($comments as $comment) {
+        $comments_user = Users_comments::where('receiver_user_id', $idUser)->get();
+
+        foreach ($comments_user as $comment) {
             $senderUser = User::find($comment->sender_user_id);
             $comment->senderUserName = $senderUser ? $senderUser->fullName : null;
         }
 
+        $comments_host = Users_comments::where('sender_user_id', $idUser)->get();
+
+        foreach ($comments_host as $comment) {
+            $senderUser = User::find($comment->sender_user_id);
+            $comment->senderUserName = $senderUser ? $senderUser->fullName : null;
+        }
+
+        $properties = Properties::select(
+            'idProperty',
+            'propertyName',
+            'propertyAbility',
+            'images.imageLink',
+            'propertyCity',
+            'propertyStatus',
+            'status_properties.status',
+            'status_properties.startDate',
+            'status_properties.endDate',
+        )->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
+            $join->on('properties.idProperty', '=', 'images.property_id');
+        })
+            ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty')
+            ->where('propertyStatus', 'Publicado')
+            ->get();
+
+        $filteredProperties = $properties->reject(function ($property) {
+            return $property->status === 'Pausado';
+        });
+
+        $filteredPropertiesArray = $filteredProperties->toArray();
+
         return response()->json([
             'host' => $host,
-            'qualification' => $qualification,
-            'comments' => $comments
+            'host qualification' => $qualification,
+            'user qualification' => $qualification_user,
+            'user posts' => $filteredPropertiesArray,
+            'comments from users to the host' => $comments_user,
+            'comments from hosts to the user' => $comments_host
         ], 201);
     }
 }
