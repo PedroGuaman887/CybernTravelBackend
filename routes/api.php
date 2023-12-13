@@ -72,6 +72,8 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::post('/StatusPause', [StatusPropertyController::class, 'createStatusPause']);
     Route::get('/statusPause/{idProperty}', [StatusPropertyController::class, 'statusPauseByIdProperties']);
+    Route::get('/statusPropertiesByIdProperties/{idProperty}', [StatusPropertyController::class, 'statusPropertiesByIdProperties']);
+
     Route::delete('/deleteStatusProperties/{idProperty}', [StatusPropertyController::class, 'DeleteStatusProperty']);
     Route::post('/reservations', [ReservationsController::class, 'createdReservation']);
     Route::post('/reservations/{idReservations}', [ReservationsController::class, 'updateReservation']);
@@ -98,6 +100,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('/perfilUser/{idUser}', [QualificationsUserController::class, 'getPerfilUser']);
 
     Route::post('/updateUserPicture/{idUser}', [QualificationController::class, 'updateUserPicture']);
+
+    
 });
 
 
