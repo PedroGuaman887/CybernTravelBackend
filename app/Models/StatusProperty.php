@@ -12,6 +12,13 @@ class StatusProperty extends Model
     protected $fillable = [
         'status',
         'startDate',
-        'endDate'
+        'endDate',
+        'idProperty'
     ];
+
+    public function property()
+    {
+        return $this->belongsTo(Properties::class, 'idProperty');
+    }
+
 }

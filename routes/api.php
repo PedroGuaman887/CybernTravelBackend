@@ -70,6 +70,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::delete('/favorites/{idFavorites}', [FavoritesController::class, 'destroy']);
 
     Route::post('/StatusPause', [StatusPropertyController::class, 'createStatusPause']);
+    Route::get('/statusPause/{idProperty}', [StatusPropertyController::class, 'statusPauseByIdProperties']);
     Route::delete('/deleteStatusProperties/{idProperty}', [StatusPropertyController::class, 'DeleteStatusProperty']);
     Route::post('/reservations', [ReservationsController::class, 'createdReservation']);
     Route::post('/reservations/{idReservations}', [ReservationsController::class, 'updateReservation']);

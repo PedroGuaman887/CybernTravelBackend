@@ -6,6 +6,7 @@ use App\Models\Reservations;
 use App\Models\StatusProperty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class StatusPropertyController extends Controller
 {
@@ -14,7 +15,7 @@ class StatusPropertyController extends Controller
         $validator = Validator::make($request->all(), [
             'startDate' => 'required',
             'endDate' => 'required',
-            'property_id' => 'required',
+            'idProperty' => 'required',
 
         ]);
 
@@ -28,7 +29,7 @@ class StatusPropertyController extends Controller
             'endDate' => $request->endDate,
             'status' => 'Pausado',
         ]);
-        $statusProperty->property_id = $request->property_id;
+        $statusProperty->idProperty = $request->idProperty;
 
         $statusProperty->save();
 
@@ -41,12 +42,35 @@ class StatusPropertyController extends Controller
     }
     public function DeleteStatusProperty($idProperties)
     {
-        $deleted = StatusProperty::where('property_id', $idProperties)->delete();
+        $deleted = StatusProperty::where('idProperty', $idProperties)->delete();
 
         if ($deleted) {
             return response()->json(['message' => 'removed']);
         } else {
             return response()->json(['message' => 'no removed'], 404);
         }
+    }
+
+    public function statusPauseByIdProperties($idProperty)
+    {
+        $currentDate = now()->toDateString();
+
+         $status = DB::table('status_properties')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'status_properties.idProperty')
+            ->where('properties.idProperty', '=', $idProperty)
+            ->where(function ($query) use ($currentDate) {
+              $query->whereNull('status_properties.idProperty')
+                  ->orWhereNotNull('status_properties.idProperty')
+                 ->where('status_properties.startDate', '>=', $currentDate);
+                 })
+                ->select(
+                'status_properties.idStatus',
+                'status_properties.startDate',
+                'status_properties.endDate',
+                'status_properties.idProperty',
+            )
+            ->get();
+
+         return $status;
     }
 }

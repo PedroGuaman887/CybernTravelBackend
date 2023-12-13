@@ -6,6 +6,7 @@ use App\Models\Reservations;
 use App\Models\Properties;
 use App\Models\NotificationsHosts;
 use App\Models\NotificationsUsers;
+use App\Models\StatusProperty;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,103 @@ use Illuminate\Support\Facades\DB;
 
 class ReservationsController extends Controller
 {
+
     public function createdReservation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'startDate' => 'date_format:Y-m-d',
+            'endDate' => 'date_format:Y-m-d',
+            'totalAmount' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $property = Properties::find($request->idProperty);
+
+        if (!$property) {
+            return response()->json(['error' => 'Property not found'], 404);
+        }
+
+        $statusProperties = StatusProperty::where('property_id', $property->idProperty)
+        ->where(function ($query) use ($request) {
+            $query->whereBetween('startDate', [$request->startDate, $request->endDate])
+                ->orWhereBetween('endDate', [$request->startDate, $request->endDate])
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('startDate', '<=', $request->startDate)
+                        ->where('endDate', '>=', $request->endDate);
+                });
+        })
+            ->first();
+
+        if ($statusProperties) {
+            return response()->json(['error' => 'The property is not available in the specified date range.'], 400);
+        }
+
+        $existingReservation = Reservations::where('idProperty', $request->idProperty)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('startDate', [$request->startDate, $request->endDate])
+                    ->orWhereBetween('endDate', [$request->startDate, $request->endDate])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('startDate', '<=', $request->startDate)
+                            ->where('endDate', '>=', $request->endDate);
+                    });
+            })
+            ->first();
+
+        if ($existingReservation) {
+            return response()->json(['error' => 'There is already a reservation in the specified date range.'], 400);
+        }
+
+        $newReservation = new Reservations([
+            'startDate' => $request->startDate,
+            'endDate' => $request->endDate,
+            'totalAmount' => $request->totalAmount,
+        ]);
+
+        $newReservation->idProperty = $request->idProperty;
+        $newReservation->idUser = $request->idUser;
+
+        $newReservation->save();
+
+        $property = Properties::find($request->idProperty);
+
+        $host = User::find($property->host_id);
+
+        $notificationUser = new NotificationsUsers([
+            'nameProperty' => $property->propertyName,
+            'nameHost' => $host->fullName,
+            'phoneHost' => $host->phoneNumber,
+        ]);
+
+        $notificationUser->idProperty = $request->idProperty;
+        $notificationUser->idUser = $request->idUser;
+
+        $notificationUser->save();
+
+        $user = User::find($request->idUser);
+
+        $notificationHost = new NotificationsHosts([
+            'startDate' => $newReservation->startDate,
+            'endDate' => $newReservation->endDate,
+            'nameProperty' => $property->propertyName,
+            'nameUser' => $user->fullName,
+        ]);
+
+        $notificationHost->idProperty = $request->idProperty;
+        $notificationHost->host_id = $property->host_id;
+
+        $notificationHost->save();
+
+        return response()->json([
+            'message' => 'User successfully reservation',
+            'reservation' => $newReservation,
+            'notificationUser' => $notificationUser,
+            'notificationHost' => $notificationHost,
+        ], 201);
+    }
+    /* public function createdReservation(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'startDate' => 'date_format:Y-m-d',
@@ -89,7 +186,7 @@ class ReservationsController extends Controller
             'notificationUser' => $notificationUser,
             'notificationHost' => $notificationHost,
         ], 201);
-    }
+    } */
 
     public function updateReservation(Request $request, $id)
     {
