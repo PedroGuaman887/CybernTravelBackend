@@ -13,7 +13,7 @@ class StatusProperty extends Model
         'status',
         'startDate',
         'endDate',
-        'idProperty'
+        'property_id'
     ];
 
     public function property()

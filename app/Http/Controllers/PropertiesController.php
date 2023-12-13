@@ -316,74 +316,58 @@ class PropertiesController extends Controller
 
     public function filterProperties(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'propertyAmountMin' => 'integer|min:0',
-            'propertyAmountMax' => 'integer|min:0',
-            'propertyAbility' => 'integer|min:0',
-            'propertyCity' => 'string',
-            'startDate' => 'date_format:Y-m-d',
-            'endDate' => 'date_format:Y-m-d',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        $query = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'propertydescription', 'status_properties.status')
+        $query = Properties::select(
+            'properties.*',
+            'images.imageLink',
+        )
             ->join(DB::raw('(SELECT property_id, MAX(imageLink) as imageLink FROM images GROUP BY property_id) as images'), function ($join) {
                 $join->on('properties.idProperty', '=', 'images.property_id');
             })
-            ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty');
-
-        if ($request->has('propertyCity')) {
-            $query->where('propertyCity', 'LIKE', '%' . $request->propertyCity . '%');
-        }
-
-        if ($request->has('propertyAmountMin') && $request->has('propertyAmountMax')) {
-            $query->whereBetween('propertyAmount', [$request->propertyAmountMin, $request->propertyAmountMax]);
-        }
-
-        if ($request->has('propertyAbility')) {
-            $query->where('propertyAbility', $request->propertyAbility);
-        }
-
-        if ($request->has('startDate') && $request->has('endDate')) {
-            $query->where(function ($query) use ($request) {
-                $query->where(function ($query) use ($request) {
+            ->leftJoin('status_properties', 'status_properties.property_id', '=', 'properties.idProperty')
+            ->leftJoin('reservations', 'reservations.idProperty', '=', 'properties.idProperty')
+            ->when(
+                $request->filled('propertyAmountMin') && $request->filled('propertyAmountMax') && is_numeric($request->input('propertyAmountMin')) && is_numeric($request->input('propertyAmountMax')),
+                function ($query) use ($request) {
+                    $query->whereBetween('propertyAmount', [$request->input('propertyAmountMin'), $request->input('propertyAmountMax')]);
+                }
+            )
+            ->when(
+                $request->filled('propertyCity'),
+                function ($query) use ($request) {
+                    $query->where('propertyCity', 'LIKE', '%' . $request->input('propertyCity') . '%');
+                }
+            )
+            ->when(
+                $request->filled('propertyAbility') && is_numeric($request->input('propertyAbility')),
+                function ($query) use ($request) {
+                    $query->where('propertyAbility', '=', $request->input('propertyAbility'));
+                }
+            )
+            ->when(
+                $request->filled('startDate') && $request->filled('endDate'),
+                function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
-                        $query->where('status_properties.startDate', '>=', $request->startDate)
-                            ->where('status_properties.startDate', '<=', $request->endDate);
-                    })
-                    ->orWhere(function ($query) use ($request) {
-                        $query->where('status_properties.endDate', '>=', $request->startDate)
-                            ->where('status_properties.endDate', '<=', $request->endDate);
-                    })
-                    ->orWhere(function ($query) use ($request) {
-                        $query->where('status_properties.startDate', '<=', $request->startDate)
-                            ->where('status_properties.endDate', '>=', $request->endDate);
+                        $query->whereRaw('NOT EXISTS (
+                            SELECT 1 FROM status_properties as sp
+                            WHERE sp.property_id = properties.idProperty
+                            AND ((sp.startDate >= ? AND sp.startDate <= ?) OR
+                                (sp.endDate >= ? AND sp.endDate <= ?) OR
+                                (sp.startDate <= ? AND sp.endDate >= ?))
+                        )', [$request->input('startDate'), $request->input('endDate'), $request->input('startDate'), $request->input('endDate'), $request->input('startDate'), $request->input('endDate')])
+                            ->whereRaw('NOT EXISTS (
+                                SELECT 1 FROM reservations as r
+                                WHERE r.idProperty = properties.idProperty
+                                AND ((r.startDate >= ? AND r.startDate <= ?) OR
+                                    (r.endDate >= ? AND r.endDate <= ?) OR
+                                    (r.startDate <= ? AND r.endDate >= ?))
+                            )', [$request->input('startDate'), $request->input('endDate'), $request->input('startDate'), $request->input('endDate'), $request->input('startDate'), $request->input('endDate')]);
                     });
-                })
-                ->orWhereNull('status_properties.startDate')
-                ->orWhereNull('status_properties.endDate');
-            });
-        }
+                }
+            )
+            ->where('propertyStatus', '=', 'Publicado')
+            ->distinct(); 
 
-        $currentDate = now()->format('Y-m-d');
-
-        $properties = $query
-            ->where(function ($query) use ($currentDate) {
-                $query->whereNull('status_properties.startDate')
-                    ->orWhere('status_properties.startDate', '>', $currentDate);
-            })
-            ->orWhere(function ($query) use ($currentDate) {
-                $query->whereNull('status_properties.endDate')
-                    ->orWhere('status_properties.endDate', '<', $currentDate);
-            })
-            ->orWhere(function ($query) use ($currentDate) {
-                $query->where('status_properties.status', '!=', 'Pausado')
-                    ->orWhereNull('status_properties.status');
-            })
-            ->get();
+        $properties = $query->get();
 
         return response()->json($properties);
     }
