@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class FilterController extends Controller
 {
-    /* public function getAllPropertiesWithCity(Request $request)
+    public function getAllPropertiesWithCity(Request $request)
     {
         DB::statement("SET SQL_MODE=''");
 
@@ -86,41 +86,6 @@ class FilterController extends Controller
 
 
         return response()->json($filteredProperties);
-        return response()->json($properties);
-    } */
-
-    public function getAllPropertiesWithCity(Request $request)
-    {
-        DB::statement("SET SQL_MODE=''");
-        $city = $request->input('city');
-        $hosts = $request->input('hosts');
-        $minPrice = $request->input('minPrice');
-        $maxPrice = $request->input('maxPrice');
-
-        if (empty($city) && empty($hosts) && (empty($minPrice) || empty($maxPrice))) {
-            return response()->json(['error' => 'City, hosts, and price range cannot all be empty']);
-        }
-
-        $query = Properties::select('idProperty', 'propertyName', 'propertyAmount', 'propertyAbility', 'images.imageLink', 'images.property_id', 'propertyDescription', 'propertyCity', 'propertyStatus')
-            ->join(DB::raw('(SELECT * FROM images GROUP BY property_id) as images'), function ($join) {
-                $join->on('properties.idProperty', '=', 'images.property_id');
-            })
-            ->where('propertyStatus', 'disponible');
-
-        if (!empty($city)) {
-            $query->where('propertycity', 'LIKE', '%' . $city . '%');
-        }
-
-        if (!empty($hosts)) {
-            $query->where('propertyAbility', $hosts);
-        }
-
-        if (!empty($minPrice) && !empty($maxPrice)) {
-            $query->whereBetween('propertyAmount', [$minPrice, $maxPrice]);
-        }
-
-        $properties = $query->get();
-
         return response()->json($properties);
     }
 }
