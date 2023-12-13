@@ -15,7 +15,7 @@ class StatusPropertyController extends Controller
         $validator = Validator::make($request->all(), [
             'startDate' => 'required',
             'endDate' => 'required',
-            'idProperty' => 'required',
+            'property_id' => 'required',
 
         ]);
 
@@ -29,7 +29,7 @@ class StatusPropertyController extends Controller
             'endDate' => $request->endDate,
             'status' => 'Pausado',
         ]);
-        $statusProperty->idProperty = $request->idProperty;
+        $statusProperty->property_id = $request->property_id;
 
         $statusProperty->save();
 
@@ -42,7 +42,7 @@ class StatusPropertyController extends Controller
     }
     public function DeleteStatusProperty($idProperties)
     {
-        $deleted = StatusProperty::where('idProperty', $idProperties)->delete();
+        $deleted = StatusProperty::where('property_id', $idProperties)->delete();
 
         if ($deleted) {
             return response()->json(['message' => 'removed']);
@@ -51,44 +51,21 @@ class StatusPropertyController extends Controller
         }
     }
 
-    public function statusPauseByIdProperties($idProperty)
-    {
-        $currentDate = now()->toDateString();
-
-         $status = DB::table('status_properties')
-            ->leftJoin('properties', 'properties.idProperty', '=', 'status_properties.idProperty')
-            ->where('properties.idProperty', '=', $idProperty)
-            ->where(function ($query) use ($currentDate) {
-              $query->whereNull('status_properties.idProperty')
-                  ->orWhereNotNull('status_properties.idProperty')
-                 ->where('status_properties.startDate', '>=', $currentDate);
-                 })
-                ->select(
-                'status_properties.idStatus',
-                'status_properties.startDate',
-                'status_properties.endDate',
-                'status_properties.idProperty',
-            )
-            ->get();
-
-         return $status;
-    }
-
-    public function statusPropertiesByIdProperties($idProperty)
+    public function statusPropertiesByIdProperties($property_id)
     {
 
         $statusProperties = DB::table('status_properties')
-            ->leftJoin('properties', 'properties.idProperty', '=', 'status_properties.idProperty')
-            ->where('properties.idProperty', '=', $idProperty)
+            ->leftJoin('properties', 'properties.idProperty', '=', 'status_properties.property_id')
+            ->where('properties.idProperty', '=', $property_id)
             ->where(function ($query){
-                $query->whereNull('status_properties.idProperty')
-                    ->orWhereNotNull('status_properties.idProperty');
+                $query->whereNull('status_properties.property_id')
+                    ->orWhereNotNull('status_properties.property_id');
             })
             ->select(
                 'status_properties.idStatus',
                 'status_properties.startDate',
                 'status_properties.endDate',
-                'status_properties.idProperty',
+                'status_properties.property_id',
 
             )
             ->get();
