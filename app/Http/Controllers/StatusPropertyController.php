@@ -73,4 +73,26 @@ class StatusPropertyController extends Controller
 
          return $status;
     }
+
+    public function statusPropertiesByIdProperties($idProperty)
+    {
+
+        $statusProperties = DB::table('status_properties')
+            ->leftJoin('properties', 'properties.idProperty', '=', 'status_properties.idProperty')
+            ->where('properties.idProperty', '=', $idProperty)
+            ->where(function ($query){
+                $query->whereNull('status_properties.idProperty')
+                    ->orWhereNotNull('status_properties.idProperty');
+            })
+            ->select(
+                'status_properties.idStatus',
+                'status_properties.startDate',
+                'status_properties.endDate',
+                'status_properties.idProperty',
+
+            )
+            ->get();
+
+        return $statusProperties;
+    }
 }
