@@ -18,9 +18,9 @@ class CreateStatusPropertiesTable extends Migration
             $table->date('startDate');
             $table->date('endDate');
             $table->string('status');
-            $table->unsignedBigInteger('property_id');
+            $table->unsignedBigInteger('idProperty');
 
-            $table->foreign('property_id')->references('idProperty')->on('properties')->onDelete('cascade');
+            $table->foreign('idProperty')->references('idProperty')->on('properties')->onDelete('cascade');
             $table->timestamps();
         });
     }
